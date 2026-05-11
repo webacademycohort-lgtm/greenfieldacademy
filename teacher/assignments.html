@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Assignments - Greenfield Academy</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .page-header h1 {
+            color: #333;
+            font-size: 28px;
+        }
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        .form-section {
+            margin-bottom: 30px;
+        }
+        .form-section h3 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .file-upload {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .file-upload:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        .file-upload.dragover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        .file-name {
+            color: #333;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .assignments-list {
+            margin-top: 40px;
+        }
+        .assignment-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #667eea;
+        }
+        .assignment-info {
+            flex: 1;
+        }
+        .assignment-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+        .assignment-meta {
+            display: flex;
+            gap: 20px;
+            color: #666;
+            font-size: 13px;
+        }
+        .assignment-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-small {
+            padding: 8px 12px;
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-small:hover {
+            background: #667eea;
+            color: white;
+        }
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .alert.show {
+            display: block;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+        }
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #0c5aa0;
+        }
+        .terms {
+            display: flex;
+            gap: 20px;
+            margin: 16px 0;
+        }
+        .term-badge {
+            padding: 6px 12px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .term-badge.active {
+            background: #667eea;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container" style="max-width: 100%;">
+            <a href="../index.html" class="logo">
+                <i class="fas fa-graduation-cap"></i> Greenfield Academy
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Dashboard</a>
+                <a href="assignments.html" class="active">Assignments</a>
+                <a href="../login.html" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-clipboard"></i> Create Assignment</h1>
+        </div>
+
+        <!-- Alert Messages -->
+        <div class="alert alert-success" id="successAlert">
+            <i class="fas fa-check-circle"></i> <span id="successMessage"></span>
+        </div>
+        <div class="alert alert-error" id="errorAlert">
+            <i class="fas fa-exclamation-circle"></i> <span id="errorMessage"></span>
+        </div>
+
+        <!-- Create Assignment Form -->
+        <div class="form-card">
+            <form id="assignmentForm">
+                <!-- Assignment Details Section -->
+                <div class="form-section">
+                    <h3><i class="fas fa-edit"></i> Assignment Details</h3>
+                    
+                    <div class="form-group">
+                        <label for="title">Assignment Title *</label>
+                        <input type="text" id="title" name="title" required 
+                               placeholder="e.g., Chapter 5 Exercises - Photosynthesis">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description/Instructions *</label>
+                        <textarea id="description" name="description" required 
+                                  placeholder="Provide clear instructions for the assignment..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Class & Subject Section -->
+                <div class="form-section">
+                    <h3><i class="fas fa-book"></i> Target Class & Subject</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="classSelect">Class *</label>
+                            <select id="classSelect" name="class_id" required onchange="loadSubjects()">
+                                <option value="">Select a class...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subjectSelect">Subject *</label>
+                            <select id="subjectSelect" name="subject_id" required>
+                                <option value="">Select a subject...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terms & Dates Section -->
+                <div class="form-section">
+                    <h3><i class="fas fa-calendar"></i> Term & Deadline</h3>
+
+                    <div class="form-group">
+                        <label>Current Term *</label>
+                        <div class="terms" id="termsContainer">
+                            <div class="term-badge active" onclick="selectTerm(this, '1st Term')">1st Term</div>
+                            <div class="term-badge" onclick="selectTerm(this, '2nd Term')">2nd Term</div>
+                            <div class="term-badge" onclick="selectTerm(this, '3rd Term')">3rd Term</div>
+                        </div>
+                        <input type="hidden" id="term" name="term" value="1st Term">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dueDate">Due Date *</label>
+                            <input type="date" id="dueDate" name="due_date" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="session">Academic Session *</label>
+                            <input type="text" id="session" name="session" required 
+                                   placeholder="e.g., 2024/2025" value="2024/2025">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- File Upload Section -->
+                <div class="form-section">
+                    <h3><i class="fas fa-paperclip"></i> Attachment (Optional)</h3>
+                    
+                    <div class="form-group">
+                        <label>Upload Assignment File</label>
+                        <div class="file-upload" id="fileUpload" ondrop="handleDrop(event)" 
+                             ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 32px; color: #667eea; margin-bottom: 12px;"></i>
+                            <p><strong>Drag files here or click to browse</strong></p>
+                            <p style="color: #999; font-size: 12px;">PDF, Word, Images (Max 10MB)</p>
+                            <input type="file" id="assignmentFile" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt" style="display: none;">
+                        </div>
+                        <div class="file-name" id="fileName"></div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="fas fa-check"></i> Create Assignment
+                    </button>
+                    <button type="reset" class="btn btn-secondary">
+                        <i class="fas fa-redo"></i> Clear Form
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Your Assignments -->
+        <div class="assignments-list">
+            <h2 style="color: #333; margin-bottom: 20px;">
+                <i class="fas fa-list"></i> Your Assignments
+            </h2>
+            <div class="loading" id="loading">
+                <i class="fas fa-spinner fa-spin"></i> Loading assignments...
+            </div>
+            <div id="assignmentsList"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/supabase-client.js"></script>
+    <script>
+        let teacherId = null;
+        let selectedFile = null;
+        let allClasses = [];
+        let allSubjects = [];
+
+        async function init() {
+            try {
+                const session = await window.supabase.auth.getSession();
+                if (!session.data.session) {
+                    window.location.href = '../login.html';
+                    return;
+                }
+
+                // Get teacher info
+                const { data: teacher } = await window.supabase
+                    .from('staff')
+                    .select('id')
+                    .eq('profile_id', session.data.session.user.id)
+                    .single();
+
+                if (!teacher) {
+                    showError('You are not registered as a teacher. Please contact administration.');
+                    return;
+                }
+
+                teacherId = teacher.id;
+
+                // Load classes and subjects
+                await loadClasses();
+                await loadSubjects();
+                await loadMyAssignments();
+
+                // Set minimum date to today
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('dueDate').min = today;
+            } catch (error) {
+                showError('Error initializing: ' + error.message);
+            }
+        }
+
+        async function loadClasses() {
+            try {
+                const { data, error } = await window.supabase
+                    .from('classes')
+                    .select('*')
+                    .order('name');
+
+                if (error) throw error;
+                allClasses = data || [];
+
+                const select = document.getElementById('classSelect');
+                select.innerHTML = '<option value="">Select a class...</option>' +
+                    allClasses.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            } catch (error) {
+                showError('Error loading classes: ' + error.message);
+            }
+        }
+
+        async function loadSubjects(classId) {
+            try {
+                classId = classId || document.getElementById('classSelect').value;
+                
+                if (!classId) {
+                    document.getElementById('subjectSelect').innerHTML = 
+                        '<option value="">Select a class first...</option>';
+                    return;
+                }
+
+                const { data, error } = await window.supabase
+                    .from('class_subjects')
+                    .select(`
+                        id,
+                        subject:subjects(id, name, code)
+                    `)
+                    .eq('class_id', classId);
+
+                if (error) throw error;
+
+                const select = document.getElementById('subjectSelect');
+                if (data && data.length > 0) {
+                    select.innerHTML = '<option value="">Select a subject...</option>' +
+                        data.map(cs => `<option value="${cs.subject.id}">${cs.subject.name} (${cs.subject.code})</option>`).join('');
+                } else {
+                    select.innerHTML = '<option value="">No subjects assigned to this class</option>';
+                }
+            } catch (error) {
+                showError('Error loading subjects: ' + error.message);
+            }
+        }
+
+        function selectTerm(element, term) {
+            document.querySelectorAll('.term-badge').forEach(b => b.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById('term').value = term;
+        }
+
+        document.getElementById('fileUpload').addEventListener('click', () => {
+            document.getElementById('assignmentFile').click();
+        });
+
+        document.getElementById('assignmentFile').addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                selectedFile = e.target.files[0];
+                document.getElementById('fileName').textContent = `✓ File selected: ${selectedFile.name}`;
+            }
+        });
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            document.getElementById('fileUpload').classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            document.getElementById('fileUpload').classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            document.getElementById('fileUpload').classList.remove('dragover');
+            if (e.dataTransfer.files.length > 0) {
+                selectedFile = e.dataTransfer.files[0];
+                document.getElementById('assignmentFile').files = e.dataTransfer.files;
+                document.getElementById('fileName').textContent = `✓ File selected: ${selectedFile.name}`;
+            }
+        }
+
+        document.getElementById('assignmentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            try {
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+
+                let fileUrl = null;
+                if (selectedFile) {
+                    const fileName = `assignments/${Date.now()}_${selectedFile.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+                    const { data: upload, error: uploadError } = await window.supabase
+                        .storage
+                        .from('assignments')
+                        .upload(fileName, selectedFile);
+
+                    if (uploadError) throw uploadError;
+                    fileUrl = fileName;
+                }
+
+                const { data, error } = await window.supabase
+                    .from('assignments')
+                    .insert([{
+                        title: document.getElementById('title').value,
+                        class_id: document.getElementById('classSelect').value,
+                        subject_id: document.getElementById('subjectSelect').value,
+                        term: document.getElementById('term').value,
+                        session: document.getElementById('session').value,
+                        due_date: document.getElementById('dueDate').value,
+                        file_url: fileUrl,
+                        uploaded_by: teacherId
+                    }])
+                    .select();
+
+                if (error) throw error;
+
+                showSuccess('✓ Assignment created successfully!');
+                document.getElementById('assignmentForm').reset();
+                selectedFile = null;
+                document.getElementById('fileName').textContent = '';
+                await loadMyAssignments();
+
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> Create Assignment';
+            } catch (error) {
+                showError('Error creating assignment: ' + error.message);
+                document.getElementById('submitBtn').disabled = false;
+                document.getElementById('submitBtn').innerHTML = '<i class="fas fa-check"></i> Create Assignment';
+            }
+        });
+
+        async function loadMyAssignments() {
+            try {
+                const { data, error } = await window.supabase
+                    .from('assignments')
+                    .select(`
+                        *,
+                        class:classes(name),
+                        subject:subjects(name)
+                    `)
+                    .eq('uploaded_by', teacherId)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                const list = document.getElementById('assignmentsList');
+                document.getElementById('loading').style.display = 'none';
+
+                if (!data || data.length === 0) {
+                    list.innerHTML = '<div class="no-data">No assignments created yet</div>';
+                    return;
+                }
+
+                list.innerHTML = data.map(a => `
+                    <div class="assignment-item">
+                        <div class="assignment-info">
+                            <div class="assignment-title">${a.title}</div>
+                            <div class="assignment-meta">
+                                <span><i class="fas fa-book"></i> ${a.class.name} - ${a.subject.name}</span>
+                                <span><i class="fas fa-calendar"></i> Due: ${new Date(a.due_date).toLocaleDateString()}</span>
+                                <span><i class="fas fa-info-circle"></i> ${a.term}</span>
+                            </div>
+                        </div>
+                        <div class="assignment-actions">
+                            <button class="btn-small" onclick="viewSubmissions('${a.id}')">
+                                <i class="fas fa-eye"></i> View Submissions
+                            </button>
+                            <button class="btn-small" onclick="deleteAssignment('${a.id}')" style="color: #ef4444;">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                showError('Error loading assignments: ' + error.message);
+            }
+        }
+
+        function viewSubmissions(assignmentId) {
+            alert('Submissions view coming soon! Assignment ID: ' + assignmentId);
+        }
+
+        async function deleteAssignment(assignmentId) {
+            if (!confirm('Are you sure you want to delete this assignment?')) return;
+
+            try {
+                const { error } = await window.supabase
+                    .from('assignments')
+                    .delete()
+                    .eq('id', assignmentId);
+
+                if (error) throw error;
+                showSuccess('Assignment deleted');
+                await loadMyAssignments();
+            } catch (error) {
+                showError('Error deleting assignment: ' + error.message);
+            }
+        }
+
+        function showSuccess(msg) {
+            const alert = document.getElementById('successAlert');
+            document.getElementById('successMessage').textContent = msg;
+            alert.classList.add('show');
+            setTimeout(() => alert.classList.remove('show'), 4000);
+        }
+
+        function showError(msg) {
+            const alert = document.getElementById('errorAlert');
+            document.getElementById('errorMessage').textContent = msg;
+            alert.classList.add('show');
+            setTimeout(() => alert.classList.remove('show'), 4000);
+        }
+
+        function logout() {
+            window.supabase.auth.signOut().then(() => {
+                window.location.href = '../login.html';
+            });
+        }
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>

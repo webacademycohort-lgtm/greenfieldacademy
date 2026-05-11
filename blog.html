@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog - Greenfield Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a href="index.html" class="logo"><span class="logo-mark">G</span><span>Greenfield Academy</span></a>
+    <div class="nav-cta">
+      <a href="index.html" class="btn btn-ghost btn-sm"><i class="fa-solid fa-arrow-left"></i> Home</a>
+      <a href="login.html" class="btn btn-primary btn-sm">Portal</a>
+    </div>
+  </div>
+</header>
+
+<section class="block blog-page-wrap">
+  <div class="container">
+    <div class="section-head" style="margin-bottom:2rem;">
+      <div class="eyebrow">School Blog</div>
+      <h2>News, Events and Announcements</h2>
+      <p>Stay updated with the latest stories from Greenfield Academy.</p>
+    </div>
+
+    <div class="blog-list-grid" id="blog-list">
+      <article class="news-card blog-card"><div class="body"><p>Loading posts...</p></div></article>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/blog.js"></script>
+</body>
+</html>

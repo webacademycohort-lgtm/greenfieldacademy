@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Dashboard — Greenfield Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="dash-layout">
+  <aside class="dash-sidebar" id="sidebar">
+    <a href="index.html" class="logo"><span class="logo-mark">G</span><span>Greenfield</span></a>
+    <ul class="dash-nav">
+      <li><a href="#dashboard" class="active" data-view="dashboard"><i class="fa-solid fa-house"></i> Overview</a></li>
+      <li><a href="#profile" data-view="profile"><i class="fa-solid fa-user"></i> Profile</a></li>
+      <li><a href="#results" data-view="results"><i class="fa-solid fa-chart-line"></i> Bulk Result Entry</a></li>
+      <li><a href="#assignments" data-view="assignments"><i class="fa-solid fa-file-pdf"></i> Assignments</a></li>
+      <li><a href="#classes" data-view="classes"><i class="fa-solid fa-users"></i> My Classes</a></li>
+      <li><a href="#marks" data-view="marks"><i class="fa-solid fa-clipboard-list"></i> Marks Management</a></li>
+      <li><a href="#attendance" data-view="attendance"><i class="fa-solid fa-clipboard-check"></i> Attendance</a></li>
+    </ul>
+    <hr style="margin:1.5rem 0; opacity:.15;">
+    <a href="#" id="logout-btn" style="display:flex; gap:.75rem; padding:.75rem 1rem; color:rgba(255,255,255,.75);">
+      <i class="fa-solid fa-right-from-bracket"></i> Sign out
+    </a>
+  </aside>
+
+  <main class="dash-main">
+    <div class="dash-topbar">
+      <div>
+        <button class="btn btn-ghost mobile-dash-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fa-solid fa-bars"></i></button>
+        <h1 id="view-title">Overview</h1>
+      </div>
+      <div class="dash-user">
+        <div class="avatar" id="user-avatar">T</div>
+        <div>
+          <div style="font-weight:600; font-size:.9rem;" id="user-name">—</div>
+          <div style="font-size:.75rem; color:var(--gray-500);">Teacher</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <section data-view-panel="dashboard">
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="lbl">Classes Assigned</div><div class="num" id="kpi-classes">—</div></div>
+        <div class="kpi-card gold"><div class="lbl">Subjects Taught</div><div class="num" id="kpi-subjects">—</div></div>
+        <div class="kpi-card blue"><div class="lbl">Assignments Uploaded</div><div class="num" id="kpi-asg">—</div></div>
+        <div class="kpi-card"><div class="lbl">Results Entered</div><div class="num" id="kpi-res">—</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Quick Actions</h2></div>
+        <div style="display:flex; gap:.75rem; flex-wrap:wrap;">
+          <a href="#results" data-view="results" class="btn btn-primary"><i class="fa-solid fa-pen"></i> Enter Results</a>
+          <a href="#assignments" data-view="assignments" class="btn btn-gold"><i class="fa-solid fa-upload"></i> Upload Assignment</a>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>School Broadcasts</h2></div>
+        <div id="teacher-broadcasts" style="display:grid; gap:.85rem;"></div>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section data-view-panel="profile" hidden>
+      <div class="panel">
+        <div class="panel-head"><h2>My Profile</h2></div>
+        <form id="teacher-profile-form" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem;">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input id="tp-full-name" required />
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input id="tp-email" type="email" disabled />
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input id="tp-phone" />
+          </div>
+          <div style="grid-column:1/-1;">
+            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Profile</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- BULK RESULT ENTRY -->
+    <section data-view-panel="results" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Bulk Result Entry</h2>
+          <div class="filter-row">
+            <select id="r-class"></select>
+            <select id="r-subject"></select>
+            <select id="r-term">
+              <option>1st Term</option><option>2nd Term</option><option>3rd Term</option>
+            </select>
+            <select id="r-session">
+              <option>2024/2025</option><option>2023/2024</option>
+            </select>
+            <button class="btn btn-primary btn-sm" id="r-load"><i class="fa-solid fa-arrow-rotate-right"></i> Load</button>
+          </div>
+        </div>
+        <p style="font-size:.85rem; color:var(--gray-500); margin-bottom:1rem;">
+          CA is out of 40, Exam out of 60. Total &amp; grade auto-compute on save.
+        </p>
+        <div class="table-wrap">
+          <table class="data" id="r-table">
+            <thead><tr><th>#</th><th>Adm. No.</th><th>Student</th><th>CA (40)</th><th>Exam (60)</th><th>Total</th><th>Grade</th></tr></thead>
+            <tbody><tr><td colspan="7" style="text-align:center; color:var(--gray-500);">Choose class &amp; subject, then click Load.</td></tr></tbody>
+          </table>
+        </div>
+        <div style="margin-top:1rem; display:flex; justify-content:flex-end;">
+          <button class="btn btn-primary" id="r-save"><i class="fa-solid fa-floppy-disk"></i> Save All Results</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ASSIGNMENTS -->
+    <section data-view-panel="assignments" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Upload Assignment</h2>
+        </div>
+        <form id="asg-form" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem;">
+          <div class="form-group" style="grid-column:1/-1;"><label>Title *</label><input name="title" required /></div>
+          <div class="form-group"><label>Class *</label><select name="class_id" id="a-class" required></select></div>
+          <div class="form-group"><label>Subject *</label><select name="subject_id" id="a-subject" required></select></div>
+          <div class="form-group"><label>Term *</label>
+            <select name="term" required><option>1st Term</option><option>2nd Term</option><option>3rd Term</option></select>
+          </div>
+          <div class="form-group"><label>Session *</label>
+            <select name="session" required><option>2024/2025</option><option>2023/2024</option></select>
+          </div>
+          <div class="form-group"><label>Due Date</label><input type="date" name="due_date" /></div>
+          <div class="form-group" style="grid-column:1/-1;"><label>PDF File *</label><input type="file" name="file" id="a-file" accept="application/pdf" required /></div>
+          <div style="grid-column:1/-1;">
+            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-upload"></i> Upload</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Uploaded Assignments</h2>
+          <div class="filter-row">
+            <select id="f-class"><option value="">All Classes</option></select>
+            <select id="f-subject"><option value="">All Subjects</option></select>
+            <select id="f-term"><option value="">All Terms</option><option>1st Term</option><option>2nd Term</option><option>3rd Term</option></select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data" id="asg-list">
+            <thead><tr><th>Title</th><th>Class</th><th>Subject</th><th>Term</th><th>Due</th><th>Action</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLASSES -->
+    <section data-view-panel="classes" hidden>
+      <div class="panel">
+        <div class="panel-head"><h2>My Classes</h2></div>
+        <div id="my-classes" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem;"></div>
+      </div>
+    </section>
+
+    <!-- MARKS MANAGEMENT -->
+    <section data-view-panel="marks" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Marks Management</h2>
+          <div class="filter-row">
+            <select id="m-class" required><option value="">Select Class</option></select>
+            <select id="m-subject" required><option value="">Select Subject</option></select>
+          </div>
+        </div>
+
+        <!-- Tabs for different mark types -->
+        <div style="display:flex; gap:0.5rem; margin-bottom:1.5rem; border-bottom:2px solid var(--gray-300);">
+          <button class="tab-btn active" data-tab="assignment-marks" style="padding:0.75rem 1.25rem; border:none; background:none; cursor:pointer; font-weight:600; border-bottom:3px solid transparent; color:var(--gray-600);">
+            <i class="fa-solid fa-pen"></i> Assignment Marks
+          </button>
+          <button class="tab-btn" data-tab="exam-marks" style="padding:0.75rem 1.25rem; border:none; background:none; cursor:pointer; font-weight:600; border-bottom:3px solid transparent; color:var(--gray-600);">
+            <i class="fa-solid fa-file-pdf"></i> Exam Marks
+          </button>
+          <button class="tab-btn" data-tab="test-marks" style="padding:0.75rem 1.25rem; border:none; background:none; cursor:pointer; font-weight:600; border-bottom:3px solid transparent; color:var(--gray-600);">
+            <i class="fa-solid fa-square-check"></i> Test Marks
+          </button>
+        </div>
+
+        <!-- Assignment Marks Entry -->
+        <div id="assignment-marks" class="tab-content">
+          <form id="assignment-form" style="display:grid; gap:1rem;">
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+              <div class="form-group">
+                <label class="required">Assignment Title</label>
+                <input id="a-title" required />
+              </div>
+              <div class="form-group">
+                <label class="required">Total Marks</label>
+                <input id="a-total" type="number" min="1" max="100" value="10" required />
+              </div>
+              <div class="form-group">
+                <label class="required">Term/Session</label>
+                <select id="a-term" required>
+                  <option value="">Select Term</option>
+                  <option value="First Term">First Term</option>
+                  <option value="Second Term">Second Term</option>
+                  <option value="Third Term">Third Term</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Notes</label>
+              <textarea id="a-notes" rows="2" placeholder="Optional notes about this assignment..."></textarea>
+            </div>
+
+            <div>
+              <h3 style="margin:0 0 1rem; font-size:1rem; color:var(--gray-900);">Enter Student Marks</h3>
+              <div id="assignment-marks-list" style="display:grid; gap:0.75rem; max-height:400px; overflow-y:auto;"></div>
+            </div>
+
+            <div style="display:flex; gap:0.75rem;">
+              <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Assignment Marks</button>
+              <button type="reset" class="btn btn-ghost">Clear</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Exam Marks Entry -->
+        <div id="exam-marks" class="tab-content" hidden>
+          <form id="exam-form" style="display:grid; gap:1rem;">
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+              <div class="form-group">
+                <label class="required">Exam Name</label>
+                <input id="e-title" required />
+              </div>
+              <div class="form-group">
+                <label class="required">Total Marks</label>
+                <input id="e-total" type="number" min="1" max="100" value="40" required />
+              </div>
+              <div class="form-group">
+                <label class="required">Term/Session</label>
+                <select id="e-term" required>
+                  <option value="">Select Term</option>
+                  <option value="First Term">First Term</option>
+                  <option value="Second Term">Second Term</option>
+                  <option value="Third Term">Third Term</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Exam Date</label>
+              <input id="e-date" type="date" />
+            </div>
+
+            <div>
+              <h3 style="margin:0 0 1rem; font-size:1rem; color:var(--gray-900);">Enter Student Marks</h3>
+              <div id="exam-marks-list" style="display:grid; gap:0.75rem; max-height:400px; overflow-y:auto;"></div>
+            </div>
+
+            <div style="display:flex; gap:0.75rem;">
+              <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Exam Marks</button>
+              <button type="reset" class="btn btn-ghost">Clear</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Test Marks Entry -->
+        <div id="test-marks" class="tab-content" hidden>
+          <form id="test-form" style="display:grid; gap:1rem;">
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+              <div class="form-group">
+                <label class="required">Test Name</label>
+                <input id="t-title" required />
+              </div>
+              <div class="form-group">
+                <label class="required">Total Marks</label>
+                <input id="t-total" type="number" min="1" max="50" value="5" required />
+              </div>
+              <div class="form-group">
+                <label class="required">Term/Session</label>
+                <select id="t-term" required>
+                  <option value="">Select Term</option>
+                  <option value="First Term">First Term</option>
+                  <option value="Second Term">Second Term</option>
+                  <option value="Third Term">Third Term</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <h3 style="margin:0 0 1rem; font-size:1rem; color:var(--gray-900);">Enter Student Marks</h3>
+              <div id="test-marks-list" style="display:grid; gap:0.75rem; max-height:400px; overflow-y:auto;"></div>
+            </div>
+
+            <div style="display:flex; gap:0.75rem;">
+              <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Test Marks</button>
+              <button type="reset" class="btn btn-ghost">Clear</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ATTENDANCE -->
+    <section data-view-panel="attendance" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Class Attendance</h2>
+          <div class="filter-row">
+            <select id="att-class" required><option value="">Select Class</option></select>
+            <input id="att-date" type="date" required />
+          </div>
+        </div>
+
+        <form id="attendance-form" style="display:grid; gap:1rem;">
+          <div id="attendance-list" style="display:grid; gap:0.75rem; max-height:500px; overflow-y:auto;"></div>
+
+          <div style="display:flex; gap:0.75rem; padding-top:1rem; border-top:1px solid var(--gray-300);">
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Save Attendance</button>
+            <button type="button" class="btn btn-ghost" id="mark-all-present">Mark All Present</button>
+            <button type="button" class="btn btn-ghost" id="mark-all-absent">Mark All Absent</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/supabase-client.js"></script>
+<script src="../js/teacher.js"></script>
+</body>
+</html>

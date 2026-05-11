@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Admission Status - Greenfield Academy</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admission-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--green-50) 0%, var(--cream-50) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .search-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        .search-card h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .search-card p {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .search-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #999;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .tab-btn.active {
+            color: var(--green-700);
+            border-bottom-color: var(--green-700);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--green-600);
+        }
+        .search-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--green-600) 0%, var(--green-700) 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .search-btn:hover {
+            transform: translateY(-2px);
+        }
+        .search-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .result-card {
+            background: var(--green-50);
+            border: 2px solid var(--green-200);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-card.show {
+            display: block;
+        }
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .result-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--green-600) 0%, var(--green-700) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+        }
+        .result-info h3 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        .result-info p {
+            margin: 0;
+            color: #999;
+            font-size: 14px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .result-details {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 16px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            color: #666;
+            font-weight: 600;
+        }
+        .detail-value {
+            color: #333;
+        }
+        .loading {
+            text-align: center;
+            color: var(--green-700);
+            display: none;
+        }
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            display: none;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-primary {
+            flex: 1;
+            padding: 12px;
+            background: var(--green-600);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .btn-primary:hover {
+            background: var(--green-700);
+        }
+        .btn-secondary {
+            flex: 1;
+            padding: 12px;
+            background: white;
+            color: var(--green-700);
+            border: 2px solid var(--green-700);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-secondary:hover {
+            background: var(--green-50);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header class="site-header">
+      <div class="container nav">
+        <a href="index.html" class="logo">
+          <span class="logo-mark">G</span>
+          <span>Greenfield Academy</span>
+        </a>
+        <button class="nav-toggle" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+        <ul class="nav-links">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li class="nav-dropdown">
+            <a href="#" class="dropdown-toggle" aria-expanded="false">Admission <i class="fa-solid fa-chevron-down"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="apply.html"><i class="fa-solid fa-pen-to-square"></i> Apply for Admission</a></li>
+              <li><a href="check-admission.html" class="active"><i class="fa-solid fa-magnifying-glass"></i> Check Admission Status</a></li>
+            </ul>
+          </li>
+          <li><a href="index.html#programs">Programs</a></li>
+          <li><a href="staff.html">Staff</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+        <div class="nav-cta">
+          <a href="login.html" class="btn btn-primary btn-sm">
+            <i class="fa-solid fa-right-to-bracket"></i> Portal
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <div class="admission-container">
+        <div class="search-card">
+            <h1><i class="fas fa-search"></i> Check Your Admission Status</h1>
+            <p>Enter your admission reference number or full name to check your application status</p>
+
+            <div class="search-tabs">
+                <button class="tab-btn active" onclick="switchTab(0)">
+                    <i class="fas fa-hashtag"></i> By Reference Number
+                </button>
+                <button class="tab-btn" onclick="switchTab(1)">
+                    <i class="fas fa-user"></i> By Name
+                </button>
+            </div>
+
+            <!-- Tab 1: Search by Reference Number -->
+            <div class="tab-content active">
+                <div class="form-group">
+                    <label for="refNumber">Reference Number</label>
+                    <input type="text" id="refNumber" placeholder="e.g., GFA-2025-AB0001" autocomplete="off">
+                    <small style="color: #999;">Check your admission email for your reference number</small>
+                </div>
+                <button class="search-btn" onclick="searchByReference()">Search</button>
+            </div>
+
+            <!-- Tab 2: Search by Name -->
+            <div class="tab-content">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" placeholder="Enter your first name" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" placeholder="Enter your last name" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email" autocomplete="off">
+                </div>
+                <button class="search-btn" onclick="searchByName()">Search</button>
+            </div>
+
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Searching...
+            </div>
+
+            <div class="error-message"></div>
+
+            <!-- Result Card -->
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="result-avatar">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="result-info">
+                        <h3 id="resultName"></h3>
+                        <p id="resultEmail"></p>
+                        <span class="status-badge" id="statusBadge"></span>
+                    </div>
+                </div>
+
+                <div class="result-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Reference Number:</span>
+                        <span class="detail-value" id="resultRef"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Class Applying:</span>
+                        <span class="detail-value" id="resultClass"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Submission Date:</span>
+                        <span class="detail-value" id="resultDate"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status:</span>
+                        <span class="detail-value" id="resultStatus"></span>
+                    </div>
+                    <div id="resultMessage" style="padding: 12px 0; color: #666;"></div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-primary" onclick="location.href='login.html'">
+                        <i class="fas fa-sign-in-alt"></i> Login to Portal
+                    </button>
+                    <button class="btn-secondary" onclick="resetSearch()">
+                        <i class="fas fa-redo"></i> New Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script>
+        function switchTab(index) {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const contents = document.querySelectorAll('.tab-content');
+            tabs.forEach((t, i) => t.classList.toggle('active', i === index));
+            contents.forEach((c, i) => c.classList.toggle('active', i === index));
+            resetSearch();
+        }
+
+        async function searchByReference() {
+            const refNumber = document.getElementById('refNumber').value.trim();
+            if (!refNumber) {
+                showError('Please enter a reference number');
+                return;
+            }
+            await performSearch({ reference_number: refNumber });
+        }
+
+        async function searchByName() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+
+            if (!firstName && !lastName && !email) {
+                showError('Please enter at least one search criteria');
+                return;
+            }
+
+            const filters = {};
+            if (firstName) filters.firstName = firstName;
+            if (lastName) filters.lastName = lastName;
+            if (email) filters.email = email;
+
+            await performSearch(filters);
+        }
+
+        async function performSearch(filters) {
+            const loading = document.querySelector('.loading');
+            const errorEl = document.querySelector('.error-message');
+            const resultCard = document.querySelector('.result-card');
+
+            loading.style.display = 'block';
+            errorEl.style.display = 'none';
+            resultCard.classList.remove('show');
+
+            try {
+                const c = GA.client();
+                if (!c) throw new Error('Backend connection unavailable');
+                let data = null;
+                let error = null;
+
+                if (typeof c.rpc === 'function') {
+                    const rpc = await c.rpc('check_admission_status', {
+                        p_reference_number: filters.reference_number || null,
+                        p_first_name: filters.firstName || null,
+                        p_last_name: filters.lastName || null,
+                        p_email: filters.email || null
+                    });
+                    data = Array.isArray(rpc.data) ? rpc.data : (rpc.data ? [rpc.data] : []);
+                    error = rpc.error;
+                } else {
+                    const fallback = await c.from('pending_admissions').select('*').limit(200);
+                    data = fallback.data;
+                    error = fallback.error;
+                }
+
+                if (error) throw error;
+                if (!data || data.length === 0) {
+                    showError('No admission application found. Please check your details and try again.');
+                    return;
+                }
+
+                const application = Array.isArray(data) ? data.find((item) => {
+                    if (filters.reference_number) {
+                        const needle = String(filters.reference_number).toLowerCase();
+                        return (
+                            String(item.reference_number || '').toLowerCase() === needle ||
+                            String(item.admission_no || '').toLowerCase() === needle ||
+                            String(item.id || '').toLowerCase() === needle
+                        );
+                    }
+
+                    const firstOk = !filters.firstName || String(item.first_name || '').toLowerCase().includes(filters.firstName.toLowerCase());
+                    const lastOk = !filters.lastName || String(item.last_name || '').toLowerCase().includes(filters.lastName.toLowerCase());
+                    const emailOk = !filters.email || String(item.email || '').toLowerCase() === filters.email.toLowerCase();
+                    return firstOk && lastOk && emailOk;
+                }) : null;
+
+                if (!application) {
+                    showError('No admission application found. Please check your details and try again.');
+                    return;
+                }
+
+                displayResult(application);
+            } catch (error) {
+                showError(error.message || 'An error occurred. Please try again.');
+                console.error('Search error:', error);
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        function displayResult(app) {
+            document.getElementById('resultName').textContent = app.full_name || 'N/A';
+            document.getElementById('resultEmail').textContent = app.email || 'N/A';
+            document.getElementById('resultRef').textContent = app.reference_number || 'N/A';
+            document.getElementById('resultClass').textContent = app.class_applying || 'N/A';
+            document.getElementById('resultDate').textContent = new Date(app.created_at).toLocaleDateString();
+            document.getElementById('resultStatus').textContent = app.status.toUpperCase();
+
+            const statusBadge = document.getElementById('statusBadge');
+            statusBadge.textContent = app.status.toUpperCase();
+            statusBadge.className = 'status-badge status-' + app.status;
+
+            let message = '';
+            if (app.status === 'approved') {
+                message = 'Congratulations! Your application has been approved. Please login to complete your registration.';
+            } else if (app.status === 'pending') {
+                message = 'Your application is being reviewed. We will notify you of any updates.';
+            } else if (app.status === 'rejected') {
+                message = 'Unfortunately, your application was not approved this time. Please contact the admissions office for more information.';
+            }
+
+            document.getElementById('resultMessage').textContent = message;
+            document.querySelector('.result-card').classList.add('show');
+        }
+
+        function showError(msg) {
+            const errorEl = document.querySelector('.error-message');
+            errorEl.textContent = msg;
+            errorEl.style.display = 'block';
+        }
+
+        function resetSearch() {
+            document.getElementById('refNumber').value = '';
+            document.getElementById('firstName').value = '';
+            document.getElementById('lastName').value = '';
+            document.getElementById('email').value = '';
+            document.querySelector('.error-message').style.display = 'none';
+            document.querySelector('.result-card').classList.remove('show');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apply for Admission — Greenfield Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+  <style>
+    .apply-page {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #f0fdf4 100%);
+    }
+
+    .hero-students-image {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(20, 83, 45, 0.58), rgba(20, 83, 45, 0.58)),
+        url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=2000&q=80') center/cover no-repeat;
+      opacity: 0.32;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .hero-content { position: relative; z-index: 2; }
+    .hero-icon { background: rgba(255, 255, 255, 0.18); border: 1px solid rgba(255,255,255,0.2); }
+
+    .form-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--green-700);
+      border: 2px solid var(--green-200);
+      box-shadow: 0 8px 22px rgba(22, 101, 52, 0.1);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      border-color: var(--green-400);
+      box-shadow: 0 12px 28px rgba(22, 101, 52, 0.16);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--green-600), var(--green-700));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(22, 163, 74, 0.4);
+      background: linear-gradient(135deg, var(--green-700), var(--green-800));
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .preview-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(6px);
+      z-index: 1100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .preview-overlay.show { display: flex; }
+
+    .preview-card {
+      width: min(940px, 96vw);
+      max-height: 92vh;
+      overflow: auto;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 26px 80px rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--gray-200);
+    }
+
+    .preview-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .preview-title {
+      color: var(--green-900);
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .preview-body { padding: 1.5rem; }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+      align-items: start;
+    }
+
+    .preview-passport {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--gray-200);
+      background: var(--gray-100);
+    }
+
+    .preview-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .preview-item {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 0.7rem 0.85rem;
+    }
+
+    .preview-item span {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.2rem;
+    }
+
+    .preview-item strong {
+      color: var(--gray-900);
+      font-size: 0.92rem;
+      word-break: break-word;
+    }
+
+    .preview-actions {
+      padding: 1rem 1.5rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: flex-end;
+    }
+
+    .application-print-sheet {
+      display: none;
+      max-width: 860px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 1.5rem;
+      border: 1px solid var(--gray-200);
+    }
+
+    .print-header {
+      border-bottom: 2px solid var(--green-700);
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      text-align: center;
+    }
+
+    .print-header h2 {
+      color: var(--green-900);
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 0.2rem;
+    }
+
+    .print-meta {
+      color: var(--gray-600);
+      font-size: 0.9rem;
+    }
+
+    .print-grid {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .print-grid img {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--gray-200);
+      background: var(--gray-100);
+    }
+
+    .print-fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(140px, 1fr));
+      gap: 0.6rem;
+      font-size: 0.9rem;
+    }
+
+    .print-fields div {
+      padding: 0.5rem 0.65rem;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      background: var(--gray-50);
+    }
+
+    .print-fields b {
+      color: var(--green-800);
+      margin-right: 0.35rem;
+    }
+
+    @media (max-width: 768px) {
+      .form-actions { grid-template-columns: 1fr; }
+      .preview-grid, .print-grid { grid-template-columns: 1fr; }
+      .preview-passport { max-width: 170px; }
+      .print-fields { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body.print-application > *:not(#application-print-sheet) {
+        display: none !important;
+      }
+
+      body.print-application #application-print-sheet {
+        display: block !important;
+        border: 0;
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body class="apply-page">
+
+<header class="site-header">
+  <div class="container nav">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">G</span>
+      <span>Greenfield Academy</span>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+    <ul class="nav-links">
+      <li><a href="index.html#home">Home</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li class="nav-dropdown">
+        <a href="#" class="dropdown-toggle" aria-expanded="false">Admission <i class="fa-solid fa-chevron-down"></i></a>
+        <ul class="dropdown-menu">
+          <li><a href="apply.html" class="active"><i class="fa-solid fa-pen-to-square"></i> Apply for Admission</a></li>
+          <li><a href="check-admission.html"><i class="fa-solid fa-magnifying-glass"></i> Check Admission Status</a></li>
+        </ul>
+      </li>
+      <li><a href="index.html#programs">Programs</a></li>
+      <li><a href="staff.html">Staff</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="login.html" class="btn btn-primary btn-sm">
+        <i class="fa-solid fa-right-to-bracket"></i> Portal
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-students-image" aria-hidden="true"></div>
+  <div class="container hero-content">
+    <div class="hero-icon">
+      <i class="fa-solid fa-graduation-cap"></i>
+    </div>
+    <h1 class="hero-title">Begin Your Excellence Journey</h1>
+    <p class="hero-subtitle">
+      Join a community of future leaders. Applications for the 2026/2027 Academic Session are now open.
+    </p>
+    <div class="badge">
+      <i class="fa-solid fa-calendar-check"></i> Early Application Deadline: June 30, 2026
+    </div>
+    
+    <div class="progress-steps" style="margin-top: 2rem;">
+      <div class="step active">
+        <span class="step-number">1</span>
+        <span>Apply Online</span>
+      </div>
+      <div class="step">
+        <span class="step-number">2</span>
+        <span>Entrance Exam</span>
+      </div>
+      <div class="step">
+        <span class="step-number">3</span>
+        <span>Interview</span>
+      </div>
+      <div class="step">
+        <span class="step-number">4</span>
+        <span>Enrollment</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Form Section -->
+<section class="form-section">
+  <div class="container form-wrapper">
+    <div class="form-card">
+      <div class="form-header">
+        <h2 class="form-title">Admission Application</h2>
+        <p class="form-description">
+          <i class="fa-solid fa-circle-info"></i> Complete all required fields. Our admissions team will respond within 48 hours.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <i class="fa-solid fa-lightbulb"></i>
+        <p>
+          <strong>Pro Tip:</strong> Have your child's birth certificate, previous school records, and a recent passport photograph ready. This will help you complete the application faster.
+        </p>
+      </div>
+
+      <form id="apply-form" novalidate>
+        <!-- Student Details Section -->
+        <div class="section-title">
+          <i class="fa-solid fa-user-graduate"></i>
+          <span>Student Information</span>
+        </div>
+        
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label>First Name <span class="required">*</span></label>
+            <input 
+              type="text" 
+              name="first_name" 
+              placeholder="e.g., Oluwaseun" 
+              required 
+              id="first_name"
+            />
+            <span class="error-message" id="first_name_error">First name is required</span>
+          </div>
+          
+          <div class="form-group">
+            <label>Middle Name <span class="optional-badge">(Optional)</span></label>
+            <input 
+              type="text" 
+              name="middle_name" 
+              placeholder="e.g., Adebayo"
+            />
+          </div>
+          
+          <div class="form-group">
+            <label>Last Name <span class="required">*</span></label>
+            <input 
+              type="text" 
+              name="last_name" 
+              placeholder="e.g., Okafor" 
+              required 
+              id="last_name"
+            />
+            <span class="error-message" id="last_name_error">Last name is required</span>
+          </div>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Date of Birth <span class="required">*</span></label>
+            <input type="date" name="date_of_birth" required id="date_of_birth" />
+            <span class="error-message" id="dob_error">Date of birth is required</span>
+          </div>
+          
+          <div class="form-group">
+            <label>Gender <span class="required">*</span></label>
+            <select name="gender" required id="gender">
+              <option value="">Select gender</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+            </select>
+            <span class="error-message" id="gender_error">Please select gender</span>
+          </div>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Class Applying For <span class="required">*</span></label>
+            <select name="class_applying" required id="class_applying">
+              <option value="">Select class</option>
+              <optgroup label="Junior Secondary">
+                <option value="JSS 1">JSS 1</option>
+                <option value="JSS 2">JSS 2</option>
+                <option value="JSS 3">JSS 3</option>
+              </optgroup>
+              <optgroup label="Senior Secondary">
+                <option value="SSS 1">SSS 1</option>
+                <option value="SSS 2">SSS 2</option>
+                <option value="SSS 3">SSS 3</option>
+              </optgroup>
+            </select>
+            <span class="error-message" id="class_error">Please select a class</span>
+          </div>
+          
+          <div class="form-group">
+            <label>Previous School <span class="optional-badge">(Optional)</span></label>
+            <input 
+              type="text" 
+              name="previous_school" 
+              placeholder="Name of last school attended" 
+            />
+          </div>
+        </div>
+
+        <!-- Passport Upload Section -->
+        <div class="section-title" style="margin-top: 2rem;">
+          <i class="fa-solid fa-camera"></i>
+          <span>Passport Photograph</span>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <div class="passport-upload" id="passport-upload-area">
+              <img id="passport-preview" class="passport-preview" alt="Passport preview" />
+              <i class="fa-solid fa-cloud-arrow-up" id="upload-icon"></i>
+              <p id="upload-text">Click to upload passport photograph</p>
+              <p class="upload-hint">JPEG or PNG, max 2MB</p>
+              <span class="remove-photo" id="remove-photo">
+                <i class="fa-solid fa-trash"></i> Remove photo
+              </span>
+              <input 
+                type="file" 
+                id="passport-input" 
+                name="passport_photo" 
+                accept="image/jpeg,image/png"
+              />
+            </div>
+            <div class="passport-requirements">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>Recent passport photograph with clear face, white background preferred. File size should not exceed 2MB.</span>
+            </div>
+            <span class="error-message" id="passport_error">Please upload a passport photograph</span>
+          </div>
+          
+          <div style="display: flex; flex-direction: column; justify-content: center; padding: 1rem;">
+            <div style="background: var(--green-50); border-radius: 12px; padding: 1.5rem;">
+              <h4 style="color: var(--green-800); font-size: 0.9rem; margin-bottom: 0.75rem;">
+                <i class="fa-solid fa-check-circle"></i> Photo Requirements
+              </h4>
+              <ul style="list-style: none; padding: 0; font-size: 0.85rem; color: var(--gray-600); line-height: 2;">
+                <li><i class="fa-solid fa-check" style="color: var(--green-500); margin-right: 0.5rem;"></i> Recent photo (within 6 months)</li>
+                <li><i class="fa-solid fa-check" style="color: var(--green-500); margin-right: 0.5rem;"></i> Plain white or light background</li>
+                <li><i class="fa-solid fa-check" style="color: var(--green-500); margin-right: 0.5rem;"></i> Clear front view of face</li>
+                <li><i class="fa-solid fa-check" style="color: var(--green-500); margin-right: 0.5rem;"></i> No sunglasses or hats</li>
+                <li><i class="fa-solid fa-check" style="color: var(--green-500); margin-right: 0.5rem;"></i> File size under 2MB</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Guardian Details Section -->
+        <div class="section-title" style="margin-top: 2rem;">
+          <i class="fa-solid fa-people-roof"></i>
+          <span>Guardian / Parent Information</span>
+        </div>
+        
+        <div class="form-group">
+          <label>Guardian Full Name <span class="required">*</span></label>
+          <input 
+            type="text" 
+            name="guardian_name" 
+            placeholder="Enter parent or guardian's full name" 
+            required 
+            id="guardian_name"
+          />
+          <span class="error-message" id="guardian_name_error">Guardian name is required</span>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Phone Number <span class="required">*</span></label>
+            <input 
+              type="tel" 
+              name="guardian_phone" 
+              placeholder="+234 800 000 0000" 
+              required 
+              id="guardian_phone"
+            />
+            <span class="error-message" id="phone_error">Valid phone number is required</span>
+          </div>
+          
+          <div class="form-group">
+            <label>Email Address <span class="required">*</span></label>
+            <input 
+              type="email" 
+              name="email" 
+              placeholder="guardian@example.com" 
+              required 
+              id="email"
+            />
+            <span class="error-message" id="email_error">Valid email is required</span>
+          </div>
+        </div>
+
+        <!-- Address Section - Structured Nigerian Format -->
+        <div class="section-title" style="margin-top: 2rem;">
+          <i class="fa-solid fa-location-dot"></i>
+          <span>Residential Address</span>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Country <span class="required">*</span></label>
+            <select name="country" required id="country">
+              <option value="">Select country</option>
+              <option value="Nigeria" selected>Nigeria</option>
+              <option value="Benin">Benin</option>
+              <option value="Cameroon">Cameroon</option>
+              <option value="Ghana">Ghana</option>
+              <option value="Niger">Niger</option>
+              <option value="Togo">Togo</option>
+              <option value="Other">Other</option>
+            </select>
+            <span class="error-message" id="country_error">Please select country</span>
+          </div>
+          
+          <div class="form-group">
+            <label>State <span class="required">*</span></label>
+            <select name="state" required id="state">
+              <option value="">Select state</option>
+              <option value="Abia">Abia</option>
+              <option value="Adamawa">Adamawa</option>
+              <option value="Akwa Ibom">Akwa Ibom</option>
+              <option value="Anambra">Anambra</option>
+              <option value="Bauchi">Bauchi</option>
+              <option value="Bayelsa">Bayelsa</option>
+              <option value="Benue">Benue</option>
+              <option value="Borno">Borno</option>
+              <option value="Cross River">Cross River</option>
+              <option value="Delta">Delta</option>
+              <option value="Ebonyi">Ebonyi</option>
+              <option value="Edo">Edo</option>
+              <option value="Ekiti">Ekiti</option>
+              <option value="Enugu">Enugu</option>
+              <option value="FCT">FCT (Abuja)</option>
+              <option value="Gombe">Gombe</option>
+              <option value="Imo">Imo</option>
+              <option value="Jigawa">Jigawa</option>
+              <option value="Kaduna">Kaduna</option>
+              <option value="Kano">Kano</option>
+              <option value="Katsina">Katsina</option>
+              <option value="Kebbi">Kebbi</option>
+              <option value="Kogi">Kogi</option>
+              <option value="Kwara">Kwara</option>
+              <option value="Lagos">Lagos</option>
+              <option value="Nasarawa">Nasarawa</option>
+              <option value="Niger">Niger</option>
+              <option value="Ogun">Ogun</option>
+              <option value="Ondo">Ondo</option>
+              <option value="Osun">Osun</option>
+              <option value="Oyo">Oyo</option>
+              <option value="Plateau">Plateau</option>
+              <option value="Rivers">Rivers</option>
+              <option value="Sokoto">Sokoto</option>
+              <option value="Taraba">Taraba</option>
+              <option value="Yobe">Yobe</option>
+              <option value="Zamfara">Zamfara</option>
+            </select>
+            <span class="error-message" id="state_error">Please select state</span>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Local Government Area (LGA) <span class="required">*</span></label>
+          <input 
+            type="text" 
+            name="lga" 
+            placeholder="Enter your Local Government Area" 
+            required 
+            id="lga"
+          />
+          <span class="error-message" id="lga_error">LGA is required</span>
+        </div>
+        
+        <div class="form-group">
+          <label>Street Address <span class="required">*</span></label>
+          <textarea 
+            name="street_address" 
+            rows="2" 
+            placeholder="Enter house number, street name, and landmarks" 
+            required 
+            id="street_address"
+          ></textarea>
+          <span class="error-message" id="street_error">Street address is required</span>
+        </div>
+
+        <!-- Terms -->
+        <div class="info-card" style="margin-top: 2rem;">
+          <i class="fa-solid fa-shield-halved"></i>
+          <p>
+            By submitting this application, you confirm that all information provided is accurate. 
+            Our <strong>privacy policy</strong> ensures your data is protected and used only for admission purposes.
+            The passport photograph will be used for identification throughout your child's academic journey.
+          </p>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="preview-btn">
+            <i class="fa-solid fa-eye"></i>
+            <span>Preview Application</span>
+          </button>
+          <button type="submit" class="submit-btn" id="submit-btn">
+            <i class="fa-solid fa-paper-plane"></i>
+            <span>Submit Application</span>
+            <div class="loading-spinner" id="spinner"></div>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Success Overlay -->
+<div class="success-overlay" id="success-overlay">
+  <div class="success-card">
+    <div class="success-icon">
+      <i class="fa-solid fa-circle-check"></i>
+    </div>
+    <h3 class="success-title">Application Submitted!</h3>
+    <p class="success-message">
+      Thank you for applying to Greenfield Academy.<br/>
+      Your application reference number is:
+    </p>
+    <div class="reference-number" id="ref-number"></div>
+    <p style="color: var(--gray-500); font-size: 0.9rem; margin-top: 0.75rem;">
+      Our admissions team will contact you within 48 hours via the email and phone number provided.
+    </p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-top:1.5rem;">
+      <button class="btn btn-secondary" onclick="printSubmittedApplication()" style="justify-content: center;">
+        <i class="fa-solid fa-print"></i> Print Copy
+      </button>
+      <button class="btn btn-primary" onclick="closeSuccess()" style="justify-content: center;">
+        <i class="fa-solid fa-check"></i> Done
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Applicant Preview -->
+<div class="preview-overlay" id="preview-overlay">
+  <div class="preview-card">
+    <div class="preview-header">
+      <div>
+        <div class="preview-title">Application Preview</div>
+        <div class="print-meta" id="preview-reference">Review your details before submission.</div>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="closePreview()">
+        <i class="fa-solid fa-xmark"></i> Close
+      </button>
+    </div>
+    <div class="preview-body" id="preview-body"></div>
+    <div class="preview-actions">
+      <button class="btn btn-secondary" onclick="closePreview()">
+        <i class="fa-solid fa-pen"></i> Continue Editing
+      </button>
+      <button class="btn btn-primary" id="submit-from-preview">
+        <i class="fa-solid fa-paper-plane"></i> Submit Application
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Printable Submitted Copy -->
+<section id="application-print-sheet" class="application-print-sheet">
+  <div class="print-header">
+    <h2>Greenfield Academy Admission Application</h2>
+    <div class="print-meta">Submitted Application Copy</div>
+    <div class="print-meta" style="margin-top:0.35rem;">
+      Reference: <strong id="print-ref-number">-</strong> | Date: <strong id="print-submitted-date">-</strong>
+    </div>
+  </div>
+  <div class="print-grid">
+    <img id="print-passport" alt="Applicant passport" />
+    <div class="print-fields" id="print-fields"></div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container footer-content">
+    <div class="footer-brand">
+      <span class="logo-mark" style="width:30px;height:30px;font-size:1rem;">G</span>
+      <span>Greenfield Academy</span>
+    </div>
+    <div class="copyright">
+      &copy; <span id="year"></span> Greenfield Academy. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script>
+  // ---- Passport Upload Handler ----
+  const passportUploadArea = document.getElementById('passport-upload-area');
+  const passportInput = document.getElementById('passport-input');
+  const passportPreview = document.getElementById('passport-preview');
+  const uploadIcon = document.getElementById('upload-icon');
+  const uploadText = document.getElementById('upload-text');
+  const removePhoto = document.getElementById('remove-photo');
+  const previewBtn = document.getElementById('preview-btn');
+  const previewOverlay = document.getElementById('preview-overlay');
+  const previewBody = document.getElementById('preview-body');
+  const previewReference = document.getElementById('preview-reference');
+  const submitFromPreviewBtn = document.getElementById('submit-from-preview');
+  let passportFile = null;
+  let latestSubmittedApplication = null;
+  
+  passportUploadArea.addEventListener('click', (e) => {
+    if (e.target !== removePhoto && !removePhoto.contains(e.target)) {
+      passportInput.click();
+    }
+  });
+  
+  passportInput.addEventListener('change', handlePassportSelect);
+  
+  passportUploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    passportUploadArea.style.borderColor = 'var(--green-500)';
+    passportUploadArea.style.background = 'var(--green-50)';
+  });
+  
+  passportUploadArea.addEventListener('dragleave', () => {
+    if (!passportFile) {
+      passportUploadArea.style.borderColor = 'var(--gray-300)';
+      passportUploadArea.style.background = 'var(--gray-50)';
+    }
+  });
+  
+  passportUploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+      passportInput.files = e.dataTransfer.files;
+      handlePassportSelect({ target: { files: [file] } });
+    }
+  });
+  
+  removePhoto.addEventListener('click', (e) => {
+    e.stopPropagation();
+    resetPassportInput();
+  });
+  
+  function handlePassportSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    // Validate file type
+    if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+      alert('Please upload a JPEG or PNG image');
+      passportInput.value = '';
+      return;
+    }
+    
+    // Validate file size (2MB max)
+    if (file.size > 2 * 1024 * 1024) {
+      alert('File size should not exceed 2MB');
+      passportInput.value = '';
+      return;
+    }
+    
+    passportFile = file;
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      passportPreview.src = e.target.result;
+      passportPreview.classList.add('show');
+      uploadIcon.style.display = 'none';
+      uploadText.textContent = file.name;
+      removePhoto.classList.add('show');
+      passportUploadArea.classList.add('has-image');
+      passportUploadArea.style.borderColor = 'var(--green-500)';
+      passportUploadArea.style.background = 'var(--green-50)';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function resetPassportInput() {
+    passportFile = null;
+    passportInput.value = '';
+    passportPreview.classList.remove('show');
+    passportPreview.src = '';
+    uploadIcon.style.display = '';
+    uploadText.textContent = 'Click to upload passport photograph';
+    removePhoto.classList.remove('show');
+    passportUploadArea.classList.remove('has-image');
+    passportUploadArea.style.borderColor = 'var(--gray-300)';
+    passportUploadArea.style.background = 'var(--gray-50)';
+  }
+
+  // ---- Form Validation & Submission ----
+  const form = document.getElementById('apply-form');
+  const submitBtn = document.getElementById('submit-btn');
+  const spinner = document.getElementById('spinner');
+  const btnText = submitBtn.querySelector('span');
+  
+  // Required fields mapping
+  const requiredFields = {
+    first_name: { message: 'First name is required', errorId: 'first_name_error' },
+    last_name: { message: 'Last name is required', errorId: 'last_name_error' },
+    date_of_birth: { message: 'Date of birth is required', errorId: 'dob_error' },
+    gender: { message: 'Please select gender', errorId: 'gender_error' },
+    class_applying: { message: 'Please select a class', errorId: 'class_error' },
+    guardian_name: { message: 'Guardian name is required', errorId: 'guardian_name_error' },
+    guardian_phone: { message: 'Valid phone number is required', errorId: 'phone_error' },
+    email: { message: 'Valid email address is required', errorId: 'email_error' },
+    country: { message: 'Please select country', errorId: 'country_error' },
+    state: { message: 'Please select state', errorId: 'state_error' },
+    lga: { message: 'LGA is required', errorId: 'lga_error' },
+    street_address: { message: 'Street address is required', errorId: 'street_error' }
+  };
+  
+  // Real-time validation
+  Object.keys(requiredFields).forEach(fieldId => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+      field.addEventListener('input', () => validateField(fieldId));
+      field.addEventListener('change', () => validateField(fieldId));
+    }
+  });
+  
+  function validateField(fieldId) {
+    const field = document.getElementById(fieldId);
+    const errorEl = document.getElementById(requiredFields[fieldId].errorId);
+    if (!field || !errorEl) return true;
+    
+    let isValid = true;
+    const value = field.value.trim();
+    
+    switch(fieldId) {
+      case 'email':
+        isValid = value && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        break;
+      case 'guardian_phone':
+        isValid = value && value.replace(/\D/g, '').length >= 11;
+        break;
+      default:
+        isValid = value !== '';
+    }
+    
+    if (!isValid) {
+      field.classList.add('error');
+      errorEl.classList.add('show');
+    } else {
+      field.classList.remove('error');
+      errorEl.classList.remove('show');
+    }
+    
+    return isValid;
+  }
+
+  function getFormSnapshot() {
+    const formData = new FormData(form);
+    return {
+      first_name: (formData.get('first_name') || '').toString().trim(),
+      middle_name: (formData.get('middle_name') || '').toString().trim(),
+      last_name: (formData.get('last_name') || '').toString().trim(),
+      date_of_birth: (formData.get('date_of_birth') || '').toString().trim(),
+      gender: (formData.get('gender') || '').toString().trim(),
+      class_applying: (formData.get('class_applying') || '').toString().trim(),
+      previous_school: (formData.get('previous_school') || '').toString().trim(),
+      guardian_name: (formData.get('guardian_name') || '').toString().trim(),
+      guardian_phone: (formData.get('guardian_phone') || '').toString().trim(),
+      email: (formData.get('email') || '').toString().trim(),
+      country: (formData.get('country') || '').toString().trim(),
+      state: (formData.get('state') || '').toString().trim(),
+      lga: (formData.get('lga') || '').toString().trim(),
+      street_address: (formData.get('street_address') || '').toString().trim(),
+      passport_preview: passportPreview.src || '',
+      submitted_at: new Date().toISOString()
+    };
+  }
+
+  function humanDate(value) {
+    if (!value) return '-';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value;
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  function safeValue(value) {
+    const text = (value || '').toString().trim();
+    return text || '-';
+  }
+
+  function buildPreviewItems(data) {
+    const fullName = [data.first_name, data.middle_name, data.last_name].filter(Boolean).join(' ');
+    return [
+      ['Full Name', safeValue(fullName)],
+      ['Date of Birth', humanDate(data.date_of_birth)],
+      ['Gender', data.gender === 'M' ? 'Male' : data.gender === 'F' ? 'Female' : '-'],
+      ['Class Applying', safeValue(data.class_applying)],
+      ['Previous School', safeValue(data.previous_school)],
+      ['Guardian Name', safeValue(data.guardian_name)],
+      ['Guardian Phone', safeValue(data.guardian_phone)],
+      ['Email', safeValue(data.email)],
+      ['Country', safeValue(data.country)],
+      ['State', safeValue(data.state)],
+      ['LGA', safeValue(data.lga)],
+      ['Street Address', safeValue(data.street_address)]
+    ];
+  }
+
+  function renderPreview(snapshot, referenceNumber = null) {
+    const previewItems = buildPreviewItems(snapshot);
+    const previewRows = previewItems.map(([label, value]) => `
+      <div class="preview-item">
+        <span>${label}</span>
+        <strong>${value}</strong>
+      </div>
+    `).join('');
+
+    const passport = safeValue(snapshot.passport_preview) === '-' ? '' : snapshot.passport_preview;
+    const passportMarkup = passport
+      ? `<img src="${passport}" alt="Passport photo preview" class="preview-passport" />`
+      : '<div class="preview-passport" style="display:grid;place-items:center;color:var(--gray-500);font-size:0.85rem;">No photo uploaded</div>';
+
+    previewReference.textContent = referenceNumber
+      ? `Submitted successfully. Reference Number: ${referenceNumber}`
+      : 'Review your details before submission.';
+
+    previewBody.innerHTML = `
+      <div class="preview-grid">
+        ${passportMarkup}
+        <div class="preview-details">${previewRows}</div>
+      </div>
+    `;
+  }
+
+  function openPreview(referenceNumber = null, source = null) {
+    const snapshot = source || getFormSnapshot();
+    renderPreview(snapshot, referenceNumber);
+    previewOverlay.classList.add('show');
+  }
+
+  function closePreview() {
+    previewOverlay.classList.remove('show');
+  }
+
+  function renderPrintSheet(snapshot, referenceNumber) {
+    const printFields = document.getElementById('print-fields');
+    const printPassport = document.getElementById('print-passport');
+    const printRef = document.getElementById('print-ref-number');
+    const printDate = document.getElementById('print-submitted-date');
+    const previewItems = buildPreviewItems(snapshot);
+
+    printFields.innerHTML = previewItems.map(([label, value]) => (
+      `<div><b>${label}:</b> ${value}</div>`
+    )).join('');
+
+    printPassport.src = snapshot.passport_preview || '';
+    printPassport.style.display = snapshot.passport_preview ? 'block' : 'none';
+    printRef.textContent = referenceNumber || '-';
+    printDate.textContent = humanDate(snapshot.submitted_at || new Date().toISOString());
+  }
+
+  function getSupabaseClient() {
+    const client = window.GA?.client?.();
+    if (!client) {
+      throw new Error('Database connection is not ready. Please refresh the page and try again.');
+    }
+    return client;
+  }
+
+  async function submitAdmissionApplication(formSnapshot, passportUrl) {
+    const supabaseClient = getSupabaseClient();
+    const fullName = `${formSnapshot.first_name} ${formSnapshot.middle_name ? formSnapshot.middle_name + ' ' : ''}${formSnapshot.last_name}`.trim();
+    const referenceNumber = `GFA-${new Date().getFullYear()}-${formSnapshot.first_name.charAt(0).toUpperCase()}${formSnapshot.last_name.charAt(0).toUpperCase()}${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+
+    const primaryPayload = {
+      first_name: formSnapshot.first_name,
+      middle_name: formSnapshot.middle_name || null,
+      last_name: formSnapshot.last_name,
+      full_name: fullName,
+      date_of_birth: formSnapshot.date_of_birth,
+      gender: formSnapshot.gender,
+      class_applying: formSnapshot.class_applying,
+      previous_school: formSnapshot.previous_school || null,
+      passport_photo_url: passportUrl,
+      guardian_name: formSnapshot.guardian_name,
+      guardian_phone: formSnapshot.guardian_phone,
+      email: formSnapshot.email,
+      country: formSnapshot.country,
+      state: formSnapshot.state,
+      lga: formSnapshot.lga,
+      street_address: formSnapshot.street_address,
+      reference_number: referenceNumber,
+      status: 'pending',
+      created_at: new Date().toISOString()
+    };
+
+    const fallbackPayload = {
+      full_name: fullName,
+      email: formSnapshot.email,
+      class_applying: formSnapshot.class_applying,
+      guardian_name: formSnapshot.guardian_name,
+      guardian_phone: formSnapshot.guardian_phone,
+      date_of_birth: formSnapshot.date_of_birth,
+      gender: formSnapshot.gender,
+      previous_school: formSnapshot.previous_school || null,
+      address: [formSnapshot.street_address, formSnapshot.lga, formSnapshot.state, formSnapshot.country].filter(Boolean).join(', '),
+      status: 'pending',
+      created_at: new Date().toISOString()
+    };
+
+    const primary = await supabaseClient
+      .from('admission_applications')
+      .insert([primaryPayload])
+      .select('id')
+      .single();
+
+    if (!primary.error) {
+      return { source: 'admission_applications', id: primary.data.id, referenceNumber };
+    }
+
+    // If admission_applications is blocked by RLS or unavailable, fallback to legacy table.
+    const fallback = await supabaseClient
+      .from('pending_admissions')
+      .insert([fallbackPayload])
+      .select('id')
+      .single();
+
+    if (!fallback.error) {
+      return { source: 'pending_admissions', id: fallback.data.id, referenceNumber };
+    }
+
+    const primaryMsg = primary.error?.message || 'Unknown error on admission_applications';
+    const fallbackMsg = fallback.error?.message || 'Unknown error on pending_admissions';
+    throw new Error(`Primary table failed: ${primaryMsg}. Fallback table failed: ${fallbackMsg}`);
+  }
+
+  async function uploadPassportPhoto(supabaseClient, passportFile) {
+    if (!passportFile) return { url: null, warning: null };
+    const bucketCandidates = ['student-passports', 'passports'];
+    const safeName = passportFile.name.replace(/[^a-zA-Z0-9.]/g, '_');
+    let lastUploadError = null;
+
+    for (const bucket of bucketCandidates) {
+      const fileName = `${bucket}/passports/${Date.now()}_${safeName}`;
+      const { error: uploadError } = await supabaseClient
+        .storage
+        .from(bucket)
+        .upload(fileName, passportFile, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (!uploadError) {
+        const { data: { publicUrl } } = supabaseClient
+          .storage
+          .from(bucket)
+          .getPublicUrl(fileName);
+        return { url: publicUrl, warning: null };
+      }
+      lastUploadError = uploadError;
+    }
+
+    return {
+      url: null,
+      warning: `Passport photo could not be uploaded (${lastUploadError?.message || 'storage unavailable'}). Your application has been submitted without the photo.`
+    };
+  }
+
+  function printSubmittedApplication() {
+    if (!latestSubmittedApplication) return;
+    renderPrintSheet(latestSubmittedApplication, latestSubmittedApplication.reference_number);
+    document.body.classList.add('print-application');
+    window.print();
+  }
+
+  window.addEventListener('afterprint', () => {
+    document.body.classList.remove('print-application');
+  });
+
+  previewBtn.addEventListener('click', () => {
+    openPreview();
+  });
+
+  submitFromPreviewBtn.addEventListener('click', () => {
+    closePreview();
+    form.requestSubmit();
+  });
+
+  previewOverlay.addEventListener('click', (event) => {
+    if (event.target === previewOverlay) closePreview();
+  });
+  
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Validate all required fields
+    let isValid = true;
+    Object.keys(requiredFields).forEach(fieldId => {
+      if (!validateField(fieldId)) isValid = false;
+    });
+    
+    // Validate passport photo
+    const passportError = document.getElementById('passport_error');
+    if (!passportFile) {
+      passportError.classList.add('show');
+      isValid = false;
+    } else {
+      passportError.classList.remove('show');
+    }
+    
+    if (!isValid) {
+      // Scroll to first error
+      const firstError = document.querySelector('.error');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstError.focus();
+      }
+      return;
+    }
+    
+    // Show loading state
+    submitBtn.disabled = true;
+    spinner.style.display = 'inline-block';
+    btnText.textContent = 'Submitting Application...';
+    
+    try {
+      const supabaseClient = getSupabaseClient();
+      // 1. Upload passport to Supabase Storage
+      let passportUrl = null;
+      let uploadWarning = null;
+      
+      if (passportFile) {
+        const uploadResult = await uploadPassportPhoto(supabaseClient, passportFile);
+        passportUrl = uploadResult.url;
+        uploadWarning = uploadResult.warning;
+      }
+      
+      // 2. Submit application data
+      const formSnapshot = getFormSnapshot();
+      const submission = await submitAdmissionApplication(formSnapshot, passportUrl);
+      const refNumber = submission.referenceNumber;
+      
+      // Show success and update preview/print copy
+      latestSubmittedApplication = {
+        ...formSnapshot,
+        reference_number: refNumber,
+        passport_preview: passportPreview.src || passportUrl || '',
+        submitted_at: new Date().toISOString()
+      };
+
+      renderPrintSheet(latestSubmittedApplication, refNumber);
+      document.getElementById('ref-number').textContent = refNumber;
+      document.getElementById('success-overlay').style.display = 'flex';
+      if (uploadWarning) {
+        alert(uploadWarning);
+      }
+      
+      // Reset form
+      form.reset();
+      resetPassportInput();
+      
+    } catch (error) {
+      console.error('Submission error:', error);
+      alert(`There was an error submitting your application: ${error.message}\n\nPlease try again or contact support.`);
+    } finally {
+      submitBtn.disabled = false;
+      spinner.style.display = 'none';
+      btnText.textContent = 'Submit Application';
+    }
+  });
+  
+  function closeSuccess() {
+    document.getElementById('success-overlay').style.display = 'none';
+  }
+
+  window.closePreview = closePreview;
+  window.printSubmittedApplication = printSubmittedApplication;
+  window.closeSuccess = closeSuccess;
+  
+  // Phone number formatting
+  const phoneInput = document.querySelector('input[name="guardian_phone"]');
+  phoneInput.addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.startsWith('234')) {
+      value = '+' + value;
+    } else if (value.startsWith('0')) {
+      value = '+234' + value.substring(1);
+    }
+    e.target.value = value.substring(0, 14);
+  });
+</script>
+</body>
+</html>

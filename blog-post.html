@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog Post - Greenfield Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a href="index.html" class="logo"><span class="logo-mark">G</span><span>Greenfield Academy</span></a>
+    <div class="nav-cta">
+      <a href="blog.html" class="btn btn-ghost btn-sm"><i class="fa-solid fa-arrow-left"></i> Blog</a>
+      <a href="login.html" class="btn btn-primary btn-sm">Portal</a>
+    </div>
+  </div>
+</header>
+
+<section class="block blog-post-wrap">
+  <div class="container" style="max-width:900px;">
+    <article id="blog-post-view" class="news-card blog-post-article" style="min-height:320px;">
+      <div class="body"><p>Loading post...</p></div>
+    </article>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/blog-post.js"></script>
+</body>
+</html>
