@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Registration — Greenfield Academy Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .register-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, var(--green-50), var(--cream-50));
+    }
+
+    .register-form-wrapper {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+      padding: 2.5rem;
+    }
+
+    .register-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .register-header h1 {
+      font-family: 'Playfair Display', serif;
+      color: var(--green-900);
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .register-header p {
+      color: var(--gray-600);
+      font-size: 0.95rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--gray-800);
+      font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.85rem;
+      border: 2px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--green-600);
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-row .form-group {
+      margin-bottom: 0;
+    }
+
+    .admission-check {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .admission-check input {
+      flex: 1;
+    }
+
+    .admission-check button {
+      padding: 0.85rem 1.5rem;
+      background: var(--green-600);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .admission-check button:hover {
+      background: var(--green-700);
+    }
+
+    .admission-check button:disabled {
+      background: var(--gray-400);
+      cursor: not-allowed;
+    }
+
+    .admission-info {
+      background: var(--green-50);
+      border-left: 4px solid var(--green-600);
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+
+    .admission-info.show {
+      display: block;
+    }
+
+    .admission-info.error {
+      background: var(--red-50);
+      border-left-color: var(--red-600);
+    }
+
+    .admission-info h4 {
+      margin: 0 0 0.5rem 0;
+      color: var(--green-900);
+      font-size: 0.95rem;
+    }
+
+    .admission-info.error h4 {
+      color: var(--red-600);
+    }
+
+    .admission-info p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--gray-700);
+    }
+
+    .form-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 0.9rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green-600), var(--green-700));
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--green-700), var(--green-800));
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(22, 163, 74, 0.3);
+    }
+
+    .btn-primary:disabled {
+      background: var(--gray-400);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      background: var(--gray-100);
+      color: var(--gray-900);
+    }
+
+    .btn-secondary:hover {
+      background: var(--gray-200);
+    }
+
+    .signin-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: var(--gray-600);
+    }
+
+    .signin-link a {
+      color: var(--green-600);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .signin-link a:hover {
+      text-decoration: underline;
+    }
+
+    .required::after {
+      content: ' *';
+      color: var(--red-600);
+    }
+
+    .error-message {
+      color: var(--red-600);
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+    }
+
+    .success-message {
+      background: var(--green-50);
+      border: 1px solid var(--green-200);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      color: var(--green-800);
+    }
+
+    @media (max-width: 640px) {
+      .register-form-wrapper {
+        padding: 1.5rem;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-buttons {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="register-container">
+  <div class="register-form-wrapper">
+    <div class="register-header">
+      <h1><i class="fa-solid fa-graduation-cap"></i> Student Registration</h1>
+      <p>Create your account and start your academic journey</p>
+    </div>
+
+    <form id="student-registration-form">
+      <!-- Admission Number Verification -->
+      <div class="form-group">
+        <label class="required">Admission Number</label>
+        <div class="admission-check">
+          <input 
+            type="text" 
+            id="admission-no" 
+            placeholder="Enter your admission number"
+            required
+            pattern="[A-Za-z0-9\-]+"
+          />
+          <button type="button" id="verify-admission-btn" onclick="verifyAdmission()">Verify</button>
+        </div>
+      </div>
+
+      <div class="admission-info" id="admission-info"></div>
+
+      <!-- Personal Information -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="required">First Name</label>
+          <input type="text" id="first-name" required placeholder="First name" />
+        </div>
+        <div class="form-group">
+          <label class="required">Last Name</label>
+          <input type="text" id="last-name" required placeholder="Last name" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="required">Full Name</label>
+        <input type="text" id="full-name" required placeholder="Full name as it appears in documents" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="required">Email Address</label>
+          <input type="email" id="email" required placeholder="your.email@example.com" />
+        </div>
+        <div class="form-group">
+          <label class="required">Phone Number</label>
+          <input type="tel" id="phone" required placeholder="+234 800 000 0000" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="required">Date of Birth</label>
+          <input type="date" id="date-of-birth" required />
+        </div>
+        <div class="form-group">
+          <label class="required">Gender</label>
+          <select id="gender" required>
+            <option value="">Select gender</option>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Guardian Information -->
+      <h3 style="color:var(--green-900); margin-top:2rem; margin-bottom:1rem; font-family:'Playfair Display',serif; font-size:1.1rem;">Guardian Information</h3>
+
+      <div class="form-group">
+        <label class="required">Guardian Name</label>
+        <input type="text" id="guardian-name" required placeholder="Parent or guardian full name" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="required">Guardian Phone</label>
+          <input type="tel" id="guardian-phone" required placeholder="+234 800 000 0000" />
+        </div>
+        <div class="form-group">
+          <label>Guardian Email</label>
+          <input type="email" id="guardian-email" placeholder="guardian@email.com" />
+        </div>
+      </div>
+
+      <!-- Account Credentials -->
+      <h3 style="color:var(--green-900); margin-top:2rem; margin-bottom:1rem; font-family:'Playfair Display',serif; font-size:1.1rem;">Account Credentials</h3>
+
+      <div class="form-group">
+        <label class="required">Password</label>
+        <input type="password" id="password" required placeholder="Create a strong password" minlength="8" />
+        <small style="color:var(--gray-500); margin-top:0.25rem; display:block;">At least 8 characters with mix of letters and numbers</small>
+      </div>
+
+      <div class="form-group">
+        <label class="required">Confirm Password</label>
+        <input type="password" id="password-confirm" required placeholder="Confirm your password" minlength="8" />
+      </div>
+
+      <div class="form-group">
+        <label style="display:flex; align-items:center; gap:0.5rem;">
+          <input type="checkbox" id="terms-agree" required style="width:auto; margin:0;" />
+          <span>I agree to the Terms of Service and Privacy Policy</span>
+        </label>
+      </div>
+
+      <!-- Buttons -->
+      <div class="form-buttons">
+        <a href="signup.html" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
+        <button type="submit" id="register-btn" class="btn btn-primary" disabled>
+          <i class="fa-solid fa-user-plus"></i> Create Account
+        </button>
+      </div>
+    </form>
+
+    <div class="signin-link">
+      Already have an account? <a href="login.html">Sign in here</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script>
+  let admissionData = null;
+  const form = document.getElementById('student-registration-form');
+  const admissionNo = document.getElementById('admission-no');
+  const admissionInfo = document.getElementById('admission-info');
+  const registerBtn = document.getElementById('register-btn');
+
+  // Enable/disable register button based on form validity
+  function checkFormValidity() {
+    const isValid = form.checkValidity() && admissionData !== null;
+    registerBtn.disabled = !isValid;
+  }
+
+  form.addEventListener('change', checkFormValidity);
+  form.addEventListener('input', checkFormValidity);
+
+  // Verify admission number
+  async function verifyAdmission() {
+    const admNo = admissionNo.value.trim();
+    
+    if (!admNo) {
+      showAdmissionError('Please enter an admission number');
+      return;
+    }
+
+    const verifyBtn = document.getElementById('verify-admission-btn');
+    verifyBtn.disabled = true;
+    verifyBtn.textContent = 'Verifying...';
+
+    try {
+      const c = GA.client();
+      if (!c) throw new Error('Supabase not available');
+
+      let admission = null;
+      let error = null;
+
+      // Prefer secure RPC lookup (works with strict RLS)
+      if (typeof c.rpc === 'function') {
+        const rpcResult = await c.rpc('verify_approved_admission', { p_admission_lookup: admNo });
+        admission = Array.isArray(rpcResult.data) ? rpcResult.data[0] : rpcResult.data;
+        error = rpcResult.error;
+      } else {
+        // Fallback for environments without RPC support
+        const direct = await c
+          .from('pending_admissions')
+          .select('*')
+          .eq('id', admNo)
+          .maybeSingle();
+        admission = direct.data;
+        error = direct.error;
+      }
+
+      if (error) throw error;
+
+      if (!admission) {
+        showAdmissionError('Admission number not found. Please check and try again.');
+        admissionData = null;
+      } else if ((admission.status || '').toLowerCase() !== 'approved') {
+        showAdmissionError(`Admission status: ${admission.status}. Only approved applicants can register.`);
+        admissionData = null;
+      } else {
+        showAdmissionSuccess(admission);
+        admissionData = admission;
+        
+        // Pre-fill form with admission data
+        document.getElementById('first-name').value = admission.first_name || '';
+        document.getElementById('last-name').value = admission.last_name || '';
+        document.getElementById('full-name').value = admission.full_name || '';
+        document.getElementById('email').value = admission.email || '';
+        document.getElementById('date-of-birth').value = admission.date_of_birth || '';
+        document.getElementById('gender').value = admission.gender || '';
+        document.getElementById('guardian-name').value = admission.guardian_name || '';
+        document.getElementById('guardian-phone').value = admission.guardian_phone || '';
+      }
+
+      checkFormValidity();
+    } catch (err) {
+      showAdmissionError('Error verifying admission: ' + (err.message || 'unknown'));
+      admissionData = null;
+    } finally {
+      verifyBtn.disabled = false;
+      verifyBtn.textContent = 'Verify';
+    }
+  }
+
+  function showAdmissionSuccess(admission) {
+    admissionInfo.classList.remove('error');
+    admissionInfo.classList.add('show');
+    admissionInfo.innerHTML = `
+      <h4><i class="fa-solid fa-check-circle"></i> Admission Verified</h4>
+      <p><strong>${admission.full_name}</strong> — Approved for <strong>${admission.class_applying || 'assignment pending'}</strong></p>
+    `;
+  }
+
+  function showAdmissionError(msg) {
+    admissionInfo.classList.add('error', 'show');
+    admissionInfo.innerHTML = `<h4><i class="fa-solid fa-exclamation-circle"></i> Verification Failed</h4><p>${msg}</p>`;
+  }
+
+  // Form submission
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (!admissionData) {
+      GA.toast('Please verify your admission number first', 'error');
+      return;
+    }
+
+    if (document.getElementById('password').value !== document.getElementById('password-confirm').value) {
+      GA.toast('Passwords do not match', 'error');
+      return;
+    }
+
+    registerBtn.disabled = true;
+    registerBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating account...';
+
+    try {
+      const c = GA.client();
+      if (!c) throw new Error('Supabase not available');
+
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const fullName = document.getElementById('full-name').value;
+      const assignedClassId = admissionData.assigned_class_id || null;
+      const admissionNumber = admissionData.admission_no || document.getElementById('admission-no').value.trim();
+
+      // Pre-check before auth sign up to avoid unnecessary auth rate-limit hits
+      const { data: existsByAdmission } = await c.from('students').select('id').eq('admission_no', admissionNumber).maybeSingle();
+      if (existsByAdmission) throw new Error('A student account already exists for this admission number. Please login instead.');
+
+      let authUser = null;
+      let signedInExistingAccount = false;
+
+      // Try to create auth account first.
+      const { data: authData, error: authError } = await c.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+            role: 'student'
+          }
+        }
+      });
+
+      if (authError) {
+        const signUpErr = (authError.message || '').toLowerCase();
+        const alreadyExists = signUpErr.includes('already') || signUpErr.includes('registered') || signUpErr.includes('exists');
+        if (!alreadyExists) throw authError;
+
+        // If account already exists, allow completion by signing in and continuing setup.
+        const { data: signInData, error: signInError } = await c.auth.signInWithPassword({ email, password });
+        if (signInError) {
+          throw new Error('An account with this email already exists. Please use the same password for this account or reset your password, then try again.');
+        }
+        authUser = signInData?.user || null;
+        signedInExistingAccount = true;
+      } else {
+        authUser = authData?.user || null;
+      }
+
+      if (!authUser) throw new Error('User creation failed');
+
+      // Ensure we have an authenticated session before RLS-protected inserts.
+      // In some Supabase auth settings, signUp returns a user but no active session yet.
+      let { data: currentSessionData } = await c.auth.getSession();
+      if (!currentSessionData?.session) {
+        const reSignIn = await c.auth.signInWithPassword({ email, password });
+        if (reSignIn.error || !reSignIn.data?.session) {
+          throw new Error('Account created, but no active session yet. Please sign in once, then continue registration.');
+        }
+      }
+
+      // Create student record
+      const { data: existingStudentForUser } = await c
+        .from('students')
+        .select('id')
+        .eq('profile_id', authUser.id)
+        .maybeSingle();
+
+      let studentData = existingStudentForUser || null;
+      if (!existingStudentForUser) {
+        const insertStudent = await c.from('students').insert({
+          profile_id: authUser.id,
+          admission_no: admissionNumber,
+          class_id: assignedClassId,
+          date_of_birth: document.getElementById('date-of-birth').value,
+          gender: document.getElementById('gender').value,
+          guardian_name: document.getElementById('guardian-name').value,
+          guardian_phone: document.getElementById('guardian-phone').value,
+          portal_student_id: admissionData.portal_student_id || null,
+          admitted_at: admissionData.approved_at || new Date().toISOString(),
+          school_name: GA.cfg.SCHOOL_NAME,
+          current_term: GA.cfg.CURRENT_TERM,
+          current_session: GA.cfg.CURRENT_SESSION,
+          class_fee: GA.cfg.TERM_FEE_NGN,
+          status: 'active'
+        }).select('id').single();
+
+        if (insertStudent.error) throw insertStudent.error;
+        studentData = insertStudent.data;
+      }
+
+      const { data: existingPayment } = await c
+        .from('payments')
+        .select('id')
+        .eq('student_id', studentData.id)
+        .eq('term', GA.cfg.CURRENT_TERM)
+        .eq('session', GA.cfg.CURRENT_SESSION)
+        .eq('fee_type', 'admission')
+        .maybeSingle();
+
+      if (!existingPayment) {
+        const { error: paymentError } = await c.from('payments').insert({
+          student_id: studentData.id,
+          admission_no: admissionNumber,
+          amount: GA.cfg.TERM_FEE_NGN,
+          term: GA.cfg.CURRENT_TERM,
+          session: GA.cfg.CURRENT_SESSION,
+          fee_type: 'admission',
+          status: 'unpaid'
+        });
+        if (paymentError) throw paymentError;
+      }
+
+      if (signedInExistingAccount) {
+        GA.toast('Account already existed, and your student profile has now been linked successfully.', 'success');
+      } else {
+        GA.toast('Account created successfully! Check your email to verify.', 'success');
+      }
+      setTimeout(() => location.href = 'login.html', 2000);
+    } catch (err) {
+      const msg = (err && err.message) ? err.message : 'unknown error';
+      if (msg.toLowerCase().includes('only request this after')) {
+        GA.toast('Too many signup attempts. Please wait 45-60 seconds, then try again once.', 'warn');
+      } else {
+        GA.toast('Registration failed: ' + msg, 'error');
+      }
+    } finally {
+      registerBtn.disabled = false;
+      registerBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
+    }
+  });
+
+  // Auto-enable register button when all required fields are filled
+  admissionNo.addEventListener('change', verifyAdmission);
+</script>
+
+</body>
+</html>

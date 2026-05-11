@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — Greenfield Academy Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    :root {
+      --green-50: #f0fdf4;
+      --green-100: #dcfce7;
+      --green-200: #bbf7d0;
+      --green-300: #86efac;
+      --green-400: #4ade80;
+      --green-500: #22c55e;
+      --green-600: #16a34a;
+      --green-700: #15803d;
+      --green-800: #166534;
+      --green-900: #0d3b1f;
+      --gold-400: #fbbf24;
+      --gold-500: #f59e0b;
+      --gold-600: #d97706;
+      --red-50: #fef2f2;
+      --red-100: #fee2e2;
+      --red-500: #ef4444;
+      --red-600: #dc2626;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --cream-50: #fffbeb;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, var(--green-800), var(--green-600));
+      color: var(--gray-900);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .signup-container {
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    .signup-header {
+      text-align: center;
+      color: white;
+      margin-bottom: 3rem;
+    }
+
+    .signup-header .logo-mark {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-600), var(--gold-500));
+      display: grid;
+      place-items: center;
+      color: white;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2rem;
+      margin: 0 auto 1rem;
+    }
+
+    .signup-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .signup-header p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+    }
+
+    .role-selection {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .role-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      border: 2px solid transparent;
+    }
+
+    .role-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+    }
+
+    .role-card.student {
+      border-color: var(--green-500);
+      background: linear-gradient(to bottom, white, var(--green-50));
+    }
+
+    .role-card.teacher {
+      border-color: var(--green-300);
+      background: linear-gradient(to bottom, white, var(--green-50));
+    }
+
+    .role-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .role-card.student .role-icon {
+      color: var(--green-600);
+    }
+
+    .role-card.teacher .role-icon {
+      color: var(--green-600);
+    }
+
+    .role-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      color: var(--gray-900);
+    }
+
+    .role-card p {
+      color: var(--gray-600);
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .features-list {
+      text-align: left;
+      margin-bottom: 2rem;
+    }
+
+    .features-list li {
+      list-style: none;
+      padding-left: 1.75rem;
+      margin-bottom: 0.75rem;
+      position: relative;
+      color: var(--gray-700);
+      font-size: 0.9rem;
+    }
+
+    .features-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--green-600);
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .role-card.teacher .features-list li::before {
+      color: var(--green-600);
+    }
+
+    .btn-signup {
+      display: inline-block;
+      padding: 0.9rem 2.5rem;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .role-card.student .btn-signup {
+      background: linear-gradient(135deg, var(--green-600), var(--green-700));
+      color: white;
+    }
+
+    .role-card.student .btn-signup:hover {
+      background: linear-gradient(135deg, var(--green-700), var(--green-800));
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(22, 163, 74, 0.3);
+    }
+
+    .role-card.teacher .btn-signup {
+      background: linear-gradient(135deg, var(--green-600), var(--green-700));
+      color: white;
+    }
+
+    .role-card.teacher .btn-signup:hover {
+      background: linear-gradient(135deg, var(--green-700), var(--green-800));
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(22, 163, 74, 0.3);
+    }
+
+    .signin-link {
+      text-align: center;
+      margin-top: 2rem;
+      color: white;
+    }
+
+    .signin-link a {
+      color: var(--gold-400);
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .signin-link a:hover {
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .signup-header h1 {
+        font-size: 1.8rem;
+      }
+
+      .role-card {
+        padding: 1.5rem;
+      }
+
+      .role-icon {
+        font-size: 3rem;
+      }
+
+      .role-card h2 {
+        font-size: 1.3rem;
+      }
+    }
+
+    /* Toast Notifications */
+    .toast-container {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: 400px;
+    }
+
+    .toast {
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      color: white;
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      animation: slideInRight 0.3s ease;
+    }
+
+    .toast.error {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+    }
+
+    .toast.success {
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <div class="signup-header">
+      <div class="logo-mark">G</div>
+      <h1>Join Greenfield Academy</h1>
+      <p>Choose your account type to get started</p>
+    </div>
+
+    <div class="role-selection">
+      <!-- Student Registration -->
+      <div class="role-card student">
+        <div class="role-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+        <h2>Student</h2>
+        <p>Access your grades, submit assignments, and manage your academic journey</p>
+        <ul class="features-list">
+          <li>View results and academic progress</li>
+          <li>Download assignments</li>
+          <li>Pay tuition fees online</li>
+          <li>Upload required documents</li>
+          <li>Access school broadcasts</li>
+        </ul>
+        <a href="register-student.html" class="btn-signup"><i class="fa-solid fa-user-plus"></i> Register as Student</a>
+      </div>
+
+      <!-- Teacher Registration -->
+      <div class="role-card teacher">
+        <div class="role-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+        <h2>Teacher</h2>
+        <p>Manage your classes, upload assignments, and view student performance</p>
+        <ul class="features-list">
+          <li>Manage assigned classes</li>
+          <li>Upload assignments</li>
+          <li>Post student grades</li>
+          <li>View student progress</li>
+          <li>Send messages to students</li>
+        </ul>
+        <a href="register-teacher.html" class="btn-signup"><i class="fa-solid fa-user-plus"></i> Register as Teacher</a>
+      </div>
+    </div>
+
+    <div class="signin-link">
+      Already have an account? <a href="login.html">Sign in here</a>
+    </div>
+  </div>
+</body>
+</html>

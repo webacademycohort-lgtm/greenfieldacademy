@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subjects & Teachers - Greenfield Academy</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .container-full {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .page-header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .page-header p {
+            color: #666;
+            font-size: 16px;
+        }
+        .class-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        .class-card-btn {
+            padding: 20px;
+            background: white;
+            border: 2px solid #e0e7ff;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+        }
+        .class-card-btn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            color: #667eea;
+        }
+        .class-card-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .subject-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+        .subject-card:hover {
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+            transform: translateY(-4px);
+        }
+        .subject-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+        .subject-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        .subject-title {
+            flex: 1;
+        }
+        .subject-title h3 {
+            margin: 0;
+            color: #333;
+        }
+        .subject-code {
+            color: #999;
+            font-size: 12px;
+            margin: 4px 0 0 0;
+        }
+        .teacher-info {
+            background: #f8f9ff;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+        }
+        .teacher-label {
+            color: #999;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .teacher-name {
+            color: #333;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .teacher-contact {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+            font-size: 14px;
+            color: #666;
+        }
+        .teacher-contact a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .teacher-contact a:hover {
+            color: #764ba2;
+        }
+        .no-data {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+        .no-data i {
+            font-size: 48px;
+            color: #ddd;
+            margin-bottom: 16px;
+        }
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+        }
+        .loading-spinner.active {
+            display: block;
+        }
+        .class-teacher-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        .class-teacher-banner h3 {
+            margin: 0 0 8px 0;
+        }
+        .class-teacher-banner p {
+            margin: 0;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-graduation-cap"></i> Greenfield Academy
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="apply.html">Apply</a>
+                <a href="check-admission.html">Check Status</a>
+                <a href="login.html">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-full">
+        <div class="page-header">
+            <h1><i class="fas fa-book"></i> Subjects & Class Teachers</h1>
+            <p>View subjects offered in each class and meet your teachers</p>
+        </div>
+
+        <!-- Class Selector -->
+        <div class="class-selector" id="classSelector"></div>
+
+        <!-- Class Teacher Banner -->
+        <div class="class-teacher-banner" id="classTeacherBanner" style="display: none;">
+            <h3>Class Teacher: <span id="classTeacherName"></span></h3>
+            <p><i class="fas fa-envelope"></i> <span id="classTeacherEmail"></span></p>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div class="loading-spinner" id="loadingSpinner">
+            <i class="fas fa-spinner fa-spin"></i> Loading subjects...
+        </div>
+
+        <!-- Subjects Grid -->
+        <div class="subjects-grid" id="subjectsGrid"></div>
+
+        <!-- No Data -->
+        <div class="no-data" id="noData">
+            <i class="fas fa-book"></i>
+            <h3>No subjects found</h3>
+            <p>Please select a class to view available subjects</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script>
+        let allClasses = [];
+        let selectedClassId = null;
+
+        async function loadClasses() {
+            try {
+                const { data, error } = await window.supabase
+                    .from('classes')
+                    .select('*')
+                    .order('name');
+
+                if (error) throw error;
+                allClasses = data || [];
+                renderClassSelector();
+                if (allClasses.length > 0) {
+                    selectClass(allClasses[0].id);
+                }
+            } catch (error) {
+                console.error('Error loading classes:', error);
+                document.getElementById('noData').style.display = 'block';
+            }
+        }
+
+        function renderClassSelector() {
+            const selector = document.getElementById('classSelector');
+            selector.innerHTML = allClasses.map(cls => `
+                <button class="class-card-btn" onclick="selectClass('${cls.id}')">
+                    <i class="fas fa-users"></i> ${cls.name}
+                </button>
+            `).join('');
+        }
+
+        async function selectClass(classId) {
+            selectedClassId = classId;
+            
+            // Update button states
+            document.querySelectorAll('.class-card-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            await loadClassTeacher(classId);
+            await loadSubjects(classId);
+        }
+
+        async function loadClassTeacher(classId) {
+            try {
+                const { data, error } = await window.supabase
+                    .from('classes')
+                    .select(`
+                        id,
+                        name,
+                        teacher:staff(id, full_name, email, phone)
+                    `)
+                    .eq('id', classId)
+                    .single();
+
+                if (error) throw error;
+
+                const banner = document.getElementById('classTeacherBanner');
+                if (data.teacher) {
+                    document.getElementById('classTeacherName').textContent = data.teacher.full_name || 'N/A';
+                    document.getElementById('classTeacherEmail').textContent = data.teacher.email || 'N/A';
+                    banner.style.display = 'block';
+                } else {
+                    banner.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error loading class teacher:', error);
+            }
+        }
+
+        async function loadSubjects(classId) {
+            const spinner = document.getElementById('loadingSpinner');
+            const grid = document.getElementById('subjectsGrid');
+            const noData = document.getElementById('noData');
+
+            spinner.classList.add('active');
+            grid.innerHTML = '';
+
+            try {
+                const { data, error } = await window.supabase
+                    .from('class_subjects')
+                    .select(`
+                        id,
+                        subject:subjects(id, name, code),
+                        teacher:staff(id, full_name, email, phone)
+                    `)
+                    .eq('class_id', classId)
+                    .order('subject.name');
+
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    noData.style.display = 'block';
+                    grid.innerHTML = '';
+                } else {
+                    noData.style.display = 'none';
+                    grid.innerHTML = data.map(cs => `
+                        <div class="subject-card">
+                            <div class="subject-header">
+                                <div class="subject-icon">
+                                    <i class="fas fa-book-open"></i>
+                                </div>
+                                <div class="subject-title">
+                                    <h3>${cs.subject.name}</h3>
+                                    <p class="subject-code">Code: ${cs.subject.code}</p>
+                                </div>
+                            </div>
+                            <div class="teacher-info">
+                                <div class="teacher-label">Subject Teacher</div>
+                                <div class="teacher-name">
+                                    <i class="fas fa-chalkboard-user"></i>
+                                    ${cs.teacher ? cs.teacher.full_name : 'TBD'}
+                                </div>
+                                ${cs.teacher ? `
+                                    <div class="teacher-contact">
+                                        <i class="fas fa-envelope"></i>
+                                        <a href="mailto:${cs.teacher.email}">${cs.teacher.email}</a>
+                                    </div>
+                                    ${cs.teacher.phone ? `
+                                        <div class="teacher-contact">
+                                            <i class="fas fa-phone"></i>
+                                            <a href="tel:${cs.teacher.phone}">${cs.teacher.phone}</a>
+                                        </div>
+                                    ` : ''}
+                                ` : '<div style="color: #999; font-size: 14px;">Not yet assigned</div>'}
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading subjects:', error);
+                noData.style.display = 'block';
+                noData.innerHTML = '<i class="fas fa-exclamation-circle"></i><h3>Error loading subjects</h3>';
+            } finally {
+                spinner.classList.remove('active');
+            }
+        }
+
+        // Initialize
+        loadClasses();
+    </script>
+</body>
+</html>
