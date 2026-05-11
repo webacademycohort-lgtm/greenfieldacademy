@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Student ID Card - Greenfield Academy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #e2e8f0;
+      font-family: 'Segoe UI', 'Roboto', 'Poppins', system-ui, sans-serif;
+      padding: 2rem 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #1f2937;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .controls {
+      padding: 0.8rem;
+      background: #f8fafc;
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.78rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-print {
+      background: #2c6e2f;
+      color: white;
+    }
+
+    .btn-back {
+      background: #1e3a5f;
+      color: white;
+    }
+
+    .loading,
+    .error {
+      border-radius: 12px;
+      padding: 0.9rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .loading {
+      background: #eff6ff;
+      color: #1e3a5f;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+      display: none;
+    }
+
+    .id-card {
+      width: 100%;
+      max-width: 380px;
+      margin: 0 auto;
+      background: linear-gradient(145deg, #ffffff 0%, #fefefe 100%);
+      border-radius: 20px;
+      box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      border: 1px solid rgba(0, 135, 83, 0.3);
+      font-family: 'Segoe UI', 'Poppins', sans-serif;
+    }
+
+    .id-header {
+      background: linear-gradient(135deg, #008753 0%, #006b42 100%);
+      padding: 0.8rem 1rem;
+      text-align: center;
+      color: white;
+    }
+
+    .id-school-name {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .id-tag {
+      font-size: 0.65rem;
+      background: rgba(255, 255, 240, 0.2);
+      display: inline-block;
+      padding: 0.1rem 0.8rem;
+      border-radius: 20px;
+      margin-top: 4px;
+    }
+
+    .id-photo-section {
+      display: flex;
+      justify-content: center;
+      margin: 1rem 0 0.5rem;
+    }
+
+    .id-photo-frame {
+      width: 120px;
+      height: 140px;
+      border-radius: 16px;
+      border: 3px solid #f5b042;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f9f9f9;
+    }
+
+    .id-photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .id-details {
+      padding: 0.8rem 1.2rem 1rem;
+    }
+
+    .id-detail-item {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dashed #e2e8f0;
+      padding: 0.4rem 0;
+      font-size: 0.75rem;
+      font-weight: 500;
+      gap: 0.6rem;
+    }
+
+    .id-label {
+      font-weight: 700;
+      color: #1e3a5f;
+      white-space: nowrap;
+    }
+
+    .id-value {
+      color: #2d3e50;
+      text-align: right;
+    }
+
+    .id-signature-strip {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 0.55rem;
+      padding: 0 0.2rem;
+      color: #475569;
+    }
+
+    .id-footer {
+      background: #fef9e3;
+      padding: 0.6rem;
+      text-align: center;
+      font-size: 0.6rem;
+      font-weight: 600;
+      border-top: 1px solid #ffe1a0;
+      color: #b45309;
+      letter-spacing: 0.4px;
+    }
+
+    .badge-nigeria {
+      background: #f5b04220;
+      border-radius: 30px;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.6rem;
+      font-weight: bold;
+      text-align: center;
+      color: #008753;
+      margin: 8px auto 10px;
+      width: fit-content;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+
+      .controls,
+      .loading,
+      .error {
+        display: none;
+      }
+
+      .id-card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="controls">
+      <button class="btn btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print ID Card</button>
+      <button class="btn btn-back" onclick="window.location.href='index.html'"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</button>
+    </div>
+
+    <div class="loading" id="loading"><i class="fa-solid fa-spinner fa-spin"></i> Loading your ID card...</div>
+    <div class="error" id="error"></div>
+
+    <div class="id-card" id="studentIdCard" style="display:none;">
+      <div class="id-header">
+        <div class="id-school-name" id="idSchoolName">GREENFIELD ACADEMY</div>
+        <div class="id-tag">APPROVED SECONDARY SCHOOL</div>
+      </div>
+
+      <div class="id-photo-section">
+        <div class="id-photo-frame" id="idPhotoFrame">
+          <img id="idCardImg" src="" alt="Student Photo" style="display:none;">
+          <div id="idPhotoPlaceholder" style="display:flex; align-items:center; justify-content:center; width:100%; height:100%; background:#eef2ff; color:#94a3b8; font-size:12px;">PASS</div>
+        </div>
+      </div>
+
+      <div class="id-details">
+        <div class="id-detail-item"><span class="id-label">Full Name:</span><span class="id-value" id="idStudentName">N/A</span></div>
+        <div class="id-detail-item"><span class="id-label">Admission No:</span><span class="id-value" id="idAdmissionNo">N/A</span></div>
+        <div class="id-detail-item"><span class="id-label">Class / Form:</span><span class="id-value" id="idClass">N/A</span></div>
+        <div class="id-detail-item"><span class="id-label">Date of Birth:</span><span class="id-value" id="idDob">N/A</span></div>
+        <div class="id-detail-item"><span class="id-label">Blood Group:</span><span class="id-value" id="idBlood">N/A</span></div>
+        <div class="id-detail-item"><span class="id-label">Session:</span><span class="id-value" id="idSession">N/A</span></div>
+      </div>
+
+      <div class="id-signature-strip">
+        <span>Principal's Signature</span>
+        <span>Student's Signature</span>
+      </div>
+
+      <div class="id-footer">
+        Valid for Current Academic Session - This ID must be worn at all times
+      </div>
+      <div class="badge-nigeria">NIGERIA VALUE INTEGRITY</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script>
+    function setPhoto(url) {
+      const img = document.getElementById('idCardImg');
+      const placeholder = document.getElementById('idPhotoPlaceholder');
+
+      if (url) {
+        img.src = url;
+        img.style.display = 'block';
+        placeholder.style.display = 'none';
+      } else {
+        img.style.display = 'none';
+        placeholder.style.display = 'flex';
+      }
+    }
+
+    function formatDob(dateStr) {
+      if (!dateStr) return 'N/A';
+      const d = new Date(dateStr);
+      if (Number.isNaN(d.getTime())) return 'N/A';
+      return d.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    async function loadIDCard() {
+      try {
+        const session = await window.supabase.auth.getSession();
+        if (!session.data.session) throw new Error('Not authenticated');
+
+        const { data: student, error } = await window.supabase
+          .from('students')
+          .select(`
+            admission_no,
+            date_of_birth,
+            blood_group,
+            current_session,
+            profile:profiles(full_name),
+            class:classes(name)
+          `)
+          .eq('profile_id', session.data.session.user.id)
+          .single();
+
+        if (error) throw error;
+
+        const { data: application } = await window.supabase
+          .from('admission_applications')
+          .select('passport_photo_url')
+          .eq('reference_number', student.admission_no)
+          .maybeSingle();
+
+        const config = window.GA_CONFIG || {};
+        document.getElementById('idSchoolName').textContent = (config.SCHOOL_NAME || 'GREENFIELD ACADEMY').toUpperCase();
+        document.getElementById('idStudentName').textContent = student.profile?.full_name || 'N/A';
+        document.getElementById('idAdmissionNo').textContent = student.admission_no || 'N/A';
+        document.getElementById('idClass').textContent = student.class?.name || 'N/A';
+        document.getElementById('idDob').textContent = formatDob(student.date_of_birth);
+        document.getElementById('idBlood').textContent = student.blood_group || 'N/A';
+        document.getElementById('idSession').textContent = student.current_session || 'N/A';
+
+        if (application?.passport_photo_url) {
+          setPhoto(application.passport_photo_url);
+        } else {
+          setPhoto(null);
+        }
+
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('studentIdCard').style.display = 'block';
+      } catch (err) {
+        document.getElementById('loading').style.display = 'none';
+        const error = document.getElementById('error');
+        error.style.display = 'block';
+        error.textContent = 'Error loading ID card: ' + (err.message || 'Please login first');
+      }
+    }
+
+    loadIDCard();
+  </script>
+</body>
+</html>

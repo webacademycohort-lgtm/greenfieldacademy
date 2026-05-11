@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Portal — Greenfield Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="dash-layout">
+
+  <aside class="dash-sidebar" id="sidebar">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">G</span>
+      <span>Greenfield</span>
+    </a>
+    <ul class="dash-nav">
+      <li><a href="#dashboard" class="active" data-view="dashboard"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+      <li><a href="#profile" data-view="profile"><i class="fa-solid fa-user"></i> Profile</a></li>
+      <li><a href="#fees" data-view="fees"><i class="fa-solid fa-credit-card"></i> Fees</a></li>
+      <li><a href="#results" data-view="results"><i class="fa-solid fa-chart-line"></i> Results</a></li>
+      <li><a href="#assignments" data-view="assignments"><i class="fa-solid fa-file-pdf"></i> Assignments</a></li>
+      <li><a href="#documents" data-view="documents"><i class="fa-solid fa-file-upload"></i> Documents</a></li>
+      <li><a href="#admission" data-view="admission"><i class="fa-solid fa-file-signature"></i> Admission Letter</a></li>
+      <li><a href="#slip" data-view="slip"><i class="fa-solid fa-print"></i> Result Slip</a></li>
+    </ul>
+    <hr style="margin:1.5rem 0; opacity:.15;">
+    <a href="#" id="logout-btn" style="display:flex; gap:.75rem; padding:.75rem 1rem; color:rgba(255,255,255,.75);">
+      <i class="fa-solid fa-right-from-bracket"></i> Sign out
+    </a>
+  </aside>
+
+  <main class="dash-main">
+    <div class="dash-topbar">
+      <div>
+        <button class="btn btn-ghost mobile-dash-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fa-solid fa-bars"></i></button>
+        <h1 id="view-title">Dashboard</h1>
+      </div>
+      <div class="dash-user">
+        <div class="avatar" id="user-avatar">S</div>
+        <div>
+          <div style="font-weight:600; font-size:.9rem;" id="user-name">Loading…</div>
+          <div style="font-size:.75rem; color:var(--gray-500);" id="user-meta">Student</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section data-view-panel="dashboard">
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="lbl">Class</div><div class="num" id="kpi-class">—</div></div>
+        <div class="kpi-card gold"><div class="lbl">Prefect</div><div class="num" id="kpi-prefect" style="font-size:1.25rem;">—</div></div>
+        <div class="kpi-card blue"><div class="lbl">Term Average</div><div class="num" id="kpi-avg">—</div></div>
+        <div class="kpi-card red"><div class="lbl">Fee Status</div><div class="num" id="kpi-fee" style="font-size:1.25rem;">—</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Recent Assignments</h2>
+          <a href="#assignments" data-view="assignments" class="btn btn-ghost btn-sm">View all <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="table-wrap">
+          <table class="data" id="recent-assignments">
+            <thead><tr><th>Title</th><th>Subject</th><th>Due</th><th>File</th></tr></thead>
+            <tbody><tr><td colspan="4" style="text-align:center; color:var(--gray-500);">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Latest Results — <span id="dash-term-label"></span></h2></div>
+        <div class="table-wrap">
+          <table class="data" id="recent-results">
+            <thead><tr><th>Subject</th><th>CA (40)</th><th>Exam (60)</th><th>Total</th><th>Grade</th><th>Remark</th></tr></thead>
+            <tbody><tr><td colspan="6" style="text-align:center; color:var(--gray-500);">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>School Broadcasts</h2></div>
+        <div id="student-broadcasts" style="display:grid; gap:.85rem;"></div>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section data-view-panel="profile" hidden>
+      <div class="panel">
+        <h2 style="color:var(--green-900); margin-bottom:1.5rem;">Student Profile</h2>
+        <div id="profile-body" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:1.25rem;"></div>
+      </div>
+    </section>
+
+    <!-- FEES -->
+    <section data-view-panel="fees" hidden>
+      <div class="panel">
+        <div class="panel-head"><h2>School Fees</h2></div>
+        <div id="fee-summary"></div>
+        <div class="table-wrap" style="margin-top:1rem;">
+          <table class="data" id="fee-table">
+            <thead><tr><th>Term</th><th>Session</th><th>Amount (₦)</th><th>Status</th><th>Reference</th><th>Date</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section data-view-panel="results" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Result Checker</h2>
+          <div class="filter-row">
+            <select id="result-term">
+              <option value="First Term">1st Term</option>
+              <option value="Second Term">2nd Term</option>
+              <option value="Third Term">3rd Term</option>
+            </select>
+            <select id="result-session">
+              <option value="2024/2025">2024/2025</option>
+              <option value="2023/2024">2023/2024</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="result-locked" style="display:none; padding:2rem; text-align:center; background:#fee2e2; border-radius:12px; color:#991b1b;">
+          <i class="fa-solid fa-lock" style="font-size:2rem; margin-bottom:.5rem;"></i>
+          <h3 style="color:#991b1b;">Results Locked</h3>
+          <p style="margin:.5rem 0 1rem;">Your school fees for this term are unpaid. Please clear your balance to view results.</p>
+          <a href="#fees" data-view="fees" class="btn btn-primary"><i class="fa-solid fa-credit-card"></i> Pay Fees Now</a>
+        </div>
+
+        <!-- Results Tabs -->
+        <div style="display:flex; gap:0.5rem; margin-bottom:1.5rem; border-bottom:2px solid var(--gray-300); flex-wrap:wrap;">
+          <button class="result-tab-btn active" data-tab="overall-results" style="padding:0.75rem 1.25rem; border:none; background:none; cursor:pointer; font-weight:600; border-bottom:3px solid transparent; color:var(--gray-600);">
+            <i class="fa-solid fa-chart-pie"></i> Overall Results
+          </button>
+          <button class="result-tab-btn" data-tab="assignment-results" style="padding:0.75rem 1.25rem; border:none; background:none; cursor:pointer; font-weight:600; border-bottom:3px solid transparent; color:var(--gray-600);">
+            <i class="fa-solid fa-pen"></i> Assignments
+          </button>
+          <button class="result-tab-btn" data-tab="exam-results" style="padding:0.75rem 1.25rem; border:none; background:none; cursor:pointer; font-weight:600; border-bottom:3px solid transparent; color:var(--gray-600);">
+            <i class="fa-solid fa-file-pdf"></i> Exams
+          </button>
+          <button class="result-tab-btn" data-tab="test-results" style="padding:0.75rem 1.25rem; border:none; background:none; cursor:pointer; font-weight:600; border-bottom:3px solid transparent; color:var(--gray-600);">
+            <i class="fa-solid fa-square-check"></i> Tests
+          </button>
+        </div>
+
+        <!-- Overall Results Tab -->
+        <div id="overall-results" class="result-tab-content">
+          <div class="table-wrap" id="result-table-wrap">
+            <table class="data" id="result-table">
+              <thead><tr><th>Subject</th><th>CA (40)</th><th>Exam (60)</th><th>Total (100)</th><th>Grade</th><th>Remark</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Assignment Marks Tab -->
+        <div id="assignment-results" class="result-tab-content" hidden>
+          <div class="table-wrap">
+            <table class="data" id="assignment-table">
+              <thead><tr><th>Subject</th><th>Title</th><th>Score</th><th>Max</th><th>%</th><th>Date</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Exam Results Tab -->
+        <div id="exam-results" class="result-tab-content" hidden>
+          <div class="table-wrap">
+            <table class="data" id="exam-table">
+              <thead><tr><th>Subject</th><th>Exam</th><th>Score</th><th>Max</th><th>%</th><th>Date</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Test Results Tab -->
+        <div id="test-results" class="result-tab-content" hidden>
+          <div class="table-wrap">
+            <table class="data" id="test-table">
+              <thead><tr><th>Subject</th><th>Test</th><th>Score</th><th>Max</th><th>%</th><th>Date</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ASSIGNMENTS -->
+    <section data-view-panel="assignments" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Assignments</h2>
+          <div class="filter-row">
+            <select id="asg-subject"><option value="">All Subjects</option></select>
+            <select id="asg-term">
+              <option value="">All Terms</option>
+              <option>1st Term</option><option>2nd Term</option><option>3rd Term</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data" id="asg-table">
+            <thead><tr><th>Title</th><th>Subject</th><th>Term</th><th>Due Date</th><th>Action</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOCUMENTS -->
+    <section data-view-panel="documents" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Required Documents</h2>
+          <p style="color:var(--gray-500); font-size:.9rem; margin:0;">Upload required documents for admission processing</p>
+        </div>
+        <div id="documents-upload-area" style="display:grid; gap:1.5rem; margin-top:1.5rem;"></div>
+      </div>
+      <div class="panel" style="margin-top:1.5rem;">
+        <h3 style="color:var(--green-900); margin-bottom:1rem;">Submitted Documents</h3>
+        <div id="documents-list" style="display:grid; gap:.85rem;"></div>
+      </div>
+    </section>
+
+    <!-- ADMISSION LETTER -->
+    <section data-view-panel="admission" hidden>
+      <div class="panel no-print" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h2>Admission Letter</h2>
+          <p style="color:var(--gray-500); font-size:.9rem;">Download or print your official admission letter.</p>
+        </div>
+        <div style="display:flex; gap:.5rem; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="print-admission-btn"><i class="fa-solid fa-print"></i> Print Letter</button>
+          <button class="btn btn-gold" id="download-admission-btn"><i class="fa-solid fa-download"></i> Download Letter</button>
+          <button class="btn btn-primary" id="print-student-id-btn"><i class="fa-solid fa-id-card"></i> Print ID Card</button>
+        </div>
+      </div>
+      <div id="admission-letter-content"></div>
+    </section>
+
+    <!-- RESULT SLIP -->
+    <section data-view-panel="slip" hidden>
+      <div class="panel no-print" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h2>Printable Result Slip</h2>
+          <p style="color:var(--gray-500); font-size:.9rem;">Select term/session, then print or save as PDF.</p>
+        </div>
+        <div class="filter-row" style="margin-bottom:0;">
+          <select id="slip-term"><option>1st Term</option><option>2nd Term</option><option>3rd Term</option></select>
+          <select id="slip-session"><option>2024/2025</option><option>2023/2024</option></select>
+          <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print / Save PDF</button>
+        </div>
+      </div>
+      <div id="slip-content"></div>
+    </section>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/supabase-client.js"></script>
+<script src="../js/student.js"></script>
+</body>
+</html>

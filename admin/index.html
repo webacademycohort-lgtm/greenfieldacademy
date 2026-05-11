@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — Greenfield Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="dash-layout">
+  <aside class="dash-sidebar" id="sidebar">
+    <a href="index.html" class="logo"><span class="logo-mark">G</span><span>Greenfield Admin</span></a>
+    <ul class="dash-nav">
+      <li><a href="#dashboard" class="active" data-view="dashboard"><i class="fa-solid fa-gauge"></i> Overview</a></li>
+      <li><a href="#admissions" data-view="admissions"><i class="fa-solid fa-user-plus"></i> Admissions</a></li>
+      <li><a href="#students" data-view="students"><i class="fa-solid fa-users"></i> Students</a></li>
+      <li><a href="#teachers" data-view="teachers"><i class="fa-solid fa-chalkboard-user"></i> Teachers</a></li>
+      <li><a href="#teacher-registrations" data-view="teacher-registrations"><i class="fa-solid fa-clipboard-check"></i> Teacher Applications</a></li>
+      <li><a href="#fees" data-view="fees"><i class="fa-solid fa-naira-sign"></i> Fees</a></li>
+      <li><a href="#broadcasts" data-view="broadcasts"><i class="fa-solid fa-bullhorn"></i> Broadcasts</a></li>
+      <li><a href="#blog" data-view="blog"><i class="fa-solid fa-newspaper"></i> Blog CMS</a></li>
+    </ul>
+    <hr style="margin:1.5rem 0; opacity:.15;">
+    <a href="#" id="logout-btn" style="display:flex; gap:.75rem; padding:.75rem 1rem; color:rgba(255,255,255,.75);">
+      <i class="fa-solid fa-right-from-bracket"></i> Sign out
+    </a>
+  </aside>
+
+  <main class="dash-main">
+    <div class="dash-topbar">
+      <div>
+        <button class="btn btn-ghost mobile-dash-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fa-solid fa-bars"></i></button>
+        <h1 id="view-title">Overview</h1>
+      </div>
+      <div class="dash-user">
+        <div class="avatar" id="user-avatar">A</div>
+        <div>
+          <div style="font-weight:600; font-size:.9rem;" id="user-name">—</div>
+          <div style="font-size:.75rem; color:var(--gray-500);">Admin</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <section data-view-panel="dashboard">
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="lbl">Active Students</div><div class="num" id="kpi-students">—</div></div>
+        <div class="kpi-card gold"><div class="lbl">Teachers</div><div class="num" id="kpi-teachers">—</div></div>
+        <div class="kpi-card blue"><div class="lbl">Pending Admissions</div><div class="num" id="kpi-pending">—</div></div>
+        <div class="kpi-card red"><div class="lbl">Outstanding Fees</div><div class="num" id="kpi-fees" style="font-size:1.5rem;">₦0</div></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(360px, 1fr)); gap:1.5rem;">
+        <div class="panel">
+          <div class="panel-head"><h2>Fee Collection by Term</h2></div>
+          <div style="height:280px;"><canvas id="chart-fees"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Class Distribution</h2></div>
+          <div style="height:280px;"><canvas id="chart-classes"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMISSIONS -->
+    <section data-view-panel="admissions" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Admission Applications</h2>
+          <div class="filter-row">
+            <select id="adm-status">
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+              <option value="">All</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data" id="adm-table">
+            <thead><tr><th>Applicant</th><th>Class</th><th>Status</th><th>Guardian</th><th>Date</th><th>Action</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- STUDENTS -->
+    <section data-view-panel="students" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Students &amp; Class Assignment</h2>
+          <div class="filter-row">
+            <select id="s-class"><option value="">All Classes</option></select>
+            <input id="s-search" placeholder="Search name / adm. no…" />
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data" id="s-table">
+            <thead><tr><th>Adm. No.</th><th>Name</th><th>Class</th><th>Prefect</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEACHERS -->
+    <section data-view-panel="teachers" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Teaching Staff</h2>
+          <button class="btn btn-primary btn-sm" id="add-teacher-btn"><i class="fa-solid fa-plus"></i> Add Teacher</button>
+        </div>
+        <div class="table-wrap">
+          <table class="data" id="t-table">
+            <thead><tr><th>Name</th><th>Email</th><th>Subjects</th><th>Phone</th><th>Action</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEACHER REGISTRATIONS -->
+    <section data-view-panel="teacher-registrations" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Teacher Application Reviews</h2>
+          <div class="filter-row">
+            <select id="tr-status">
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+              <option value="">All</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data" id="tr-table">
+            <thead><tr><th>Full Name</th><th>Email</th><th>Experience</th><th>Subjects</th><th>Status</th><th>Applied</th><th>Action</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEES -->
+    <section data-view-panel="fees" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Fee Monitoring</h2>
+          <div class="filter-row">
+            <select id="p-term"><option value="">All Terms</option><option>1st Term</option><option>2nd Term</option><option>3rd Term</option></select>
+            <select id="p-status"><option value="">All Statuses</option><option value="paid">Paid</option><option value="unpaid">Unpaid</option></select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data" id="p-table">
+            <thead><tr><th>Adm. No.</th><th>Student</th><th>Term</th><th>Session</th><th>Amount</th><th>Status</th><th>Reference</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- BROADCASTS -->
+    <section data-view-panel="broadcasts" hidden>
+      <div class="panel">
+        <div class="panel-head"><h2>Send Broadcast Message</h2></div>
+        <form id="broadcast-form" style="display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+          <div class="form-group">
+            <label>Audience</label>
+            <select id="bc-audience" required>
+              <option value="all">All</option>
+              <option value="students">Students</option>
+              <option value="teachers">Teachers</option>
+            </select>
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
+            <label>Title</label>
+            <input id="bc-title" required placeholder="e.g. Mid-Term Schedule Update" />
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
+            <label>Message</label>
+            <textarea id="bc-message" rows="4" required placeholder="Type the announcement for selected audience..."></textarea>
+          </div>
+          <div style="grid-column:1/-1;">
+            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-paper-plane"></i> Send Broadcast</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Recent Broadcasts</h2></div>
+        <div class="table-wrap">
+          <table class="data" id="bc-table">
+            <thead><tr><th>Date</th><th>Audience</th><th>Title</th><th>Message</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Parent Notifications (Admission)</h2></div>
+        <div class="table-wrap">
+          <table class="data" id="parent-notify-table">
+            <thead><tr><th>Date</th><th>Guardian</th><th>Channel</th><th>Status</th><th>Message</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOG CMS -->
+    <section data-view-panel="blog" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Blog / News</h2>
+          <button class="btn btn-primary btn-sm" id="new-post-btn"><i class="fa-solid fa-plus"></i> New Post</button>
+        </div>
+        <div class="table-wrap">
+          <table class="data" id="b-table">
+            <thead><tr><th>Title</th><th>Author</th><th>Published</th><th>Action</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modal-title">Edit</h2>
+      <button class="modal-close" onclick="document.getElementById('modal').classList.remove('active')">&times;</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="../js/config.js"></script>
+<script src="../js/supabase-client.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>
